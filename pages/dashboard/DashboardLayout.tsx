@@ -26,15 +26,25 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
     );
   }, []);
 
-  const plans = [
+const plans = [
+    { 
+      id: 'free', 
+      name: 'Free Pulse', 
+      price: '$0', 
+      period: '', 
+      desc: 'Starter resonance',
+      swipes: '12 Swipes / Day',
+      features: ['Basic Discovery', 'Limited Range', 'Daily Refresh'],
+      limited: true
+    },
     { 
       id: 'monthly', 
       name: 'Standard Orbit', 
-      price: '$9.99', 
+      price: '$29.99', 
       period: '/ mo', 
-      desc: 'Core resonance',
-      swipes: '150 Swipes / Day',
-      features: ['150 Daily Pulses', 'See who Liked', 'Global Range']
+      desc: 'Basic resonance',
+      swipes: '35 Swipes / Day',
+      features: ['35 Daily Pulses', 'See who Liked', 'Local Range']
     },
     { 
       id: 'semi', 
@@ -43,8 +53,8 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
       period: '/ 6 mo', 
       desc: 'High frequency', 
       popular: true,
-      swipes: '500 Swipes / Day',
-      features: ['500 Daily Pulses', 'Priority Nodes', '10 Soul Gifts']
+      swipes: '100 Swipes / Day',
+      features: ['100 Daily Pulses', 'Priority Nodes', '10 Soul Gifts']
     },
     { 
       id: 'annual', 
@@ -52,8 +62,8 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
       price: '$79.99', 
       period: '/ yr', 
       desc: 'Ultimate reach',
-      swipes: 'Infinite Swipes',
-      features: ['Infinite Pulses', 'Soul Mapping', 'Priority Support']
+      swipes: '200 Swipes / Day',
+      features: ['200 Daily Pulses', 'Soul Mapping', 'Priority Support']
     },
   ];
 
