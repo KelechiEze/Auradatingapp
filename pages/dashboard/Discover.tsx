@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import gsap from 'gsap';
 import { 
   Heart, X, Star, MapPin, ShieldCheck, Briefcase, Info, Send, 
   MessageSquare, Sparkles, Lock, Filter, ChevronLeft, ChevronRight, 
-  User, GraduationCap, Compass, Zap, Wine, Moon, Baby, Globe, Shield
+  User, GraduationCap, Compass, Zap, Wine, Moon, Baby, Globe, Shield,
+  Crown, LockKeyhole
 } from 'lucide-react';
 import { PremiumContext } from './DashboardLayout';
 
@@ -31,13 +33,85 @@ export const mockProfiles = [
     compliments: ["Calming."] 
   },
   { 
-    id: 3, name: "Elena", age: 28, role: "Artist", location: "Lisbon", intent: "Relationship", traits: ["Romantic", "Free-spirited"], verified: true, 
+    id: 3, name: "Elena", age: 28, role: "Artist", location: "Lisbon, PT", intent: "Relationship", traits: ["Romantic", "Free-spirited"], verified: true, 
     gender: 'Woman', lookingFor: 'Men', education: "Fine Arts", weekend: 'Painting', drinks: 'Wine lover', smokes: 'Socially',
     belief: 'Agnostic', children: 'Not sure', relocate: 'Yes', bio: "Painting the town red and seeking a muse who can keep up.", 
     prompt: "Art is long, life is short.",
     values: ["Independence", "Growth", "Passion"],
     img: "https://images.unsplash.com/photo-1516589174184-c685266e430c?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1516589174184-c685266e430c?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 4, name: "Marcus", age: 32, role: "Architect", location: "Berlin, DE", intent: "Serious", verified: true,
+    gender: 'Man', lookingFor: 'Women', education: "MSc Architecture", bio: "Minimalist in design, maximalist in love. Let's build something lasting.",
+    img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 5, name: "Yuki", age: 24, role: "Photographer", location: "Tokyo, JP", intent: "Casual", verified: true,
+    gender: 'Woman', lookingFor: 'Everyone', education: "Tokyo Arts", bio: "Capturing moments between the neon lights. Seeking a subject who sees the world in raw colors.",
+    img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 6, name: "Chloe", age: 27, role: "Sommelier", location: "Paris, FR", intent: "Relationship", verified: true,
+    gender: 'Woman', lookingFor: 'Men', education: "Wine Academy", bio: "Life is too short for bad wine and shallow conversations.",
+    img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 7, name: "David", age: 30, role: "Software Engineer", location: "New York, US", intent: "Serious", verified: true,
+    gender: 'Man', lookingFor: 'Women', education: "MIT", bio: "Debugging code by day, exploring the concrete jungle by night. Looking for a co-founder for life.",
+    img: "https://images.unsplash.com/photo-1506863530036-1efeddceb993?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1506863530036-1efeddceb993?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 8, name: "Amara", age: 29, role: "Yoga Instructor", location: "Bali, ID", intent: "Relationship", verified: true,
+    gender: 'Woman', lookingFor: 'Everyone', education: "Global Wellness", bio: "Manifesting magic and seeking a soul to share sunrises with.",
+    img: "https://images.unsplash.com/photo-1514315384763-ba401779410f?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1514315384763-ba401779410f?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 9, name: "Liam", age: 31, role: "Journalist", location: "London, UK", intent: "Casual", verified: false,
+    gender: 'Man', lookingFor: 'Women', education: "Oxford", bio: "Chasing stories and good coffee. Always packed for the next adventure.",
+    img: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 10, name: "Sofia", age: 25, role: "Fashion Stylist", location: "Milan, IT", intent: "Serious", verified: true,
+    gender: 'Woman', lookingFor: 'Men', education: "Istituto Marangoni", bio: "Elegance is the only beauty that never fades. Let's create a timeless connection.",
+    img: "https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 11, name: "Arjun", age: 34, role: "Chef", location: "Mumbai, IN", intent: "Relationship", verified: true,
+    gender: 'Man', lookingFor: 'Women', education: "Culinary Institute", bio: "Spicing up life, one dish at a time. Looking for someone to share my kitchen and my heart.",
+    img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 12, name: "Isabella", age: 28, role: "Marine Biologist", location: "Sydney, AU", intent: "Serious", verified: true,
+    gender: 'Woman', lookingFor: 'Men', education: "University of Queensland", bio: "Deep sea explorer seeking a partner who isn't afraid of the deep end.",
+    img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 13, name: "Noah", age: 26, role: "Musician", location: "Nashville, US", intent: "Relationship", verified: true,
+    gender: 'Man', lookingFor: 'Everyone', education: "Belmont", bio: "Writing songs about places I've never been. Maybe you're the melody I've been looking for.",
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 14, name: "Mia", age: 23, role: "Grad Student", location: "Toronto, CA", intent: "Casual", verified: true,
+    gender: 'Woman', lookingFor: 'Men', education: "UofT", bio: "Struggling with my thesis but winning at life. Let's grab a poutine and talk about nothing.",
+    img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 15, name: "Ethan", age: 33, role: "Creative Director", location: "San Francisco, US", intent: "Serious", verified: true,
+    gender: 'Man', lookingFor: 'Women', education: "Berkeley", bio: "Thinking outside the box but looking for a home within someone's heart.",
+    img: "https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&q=80&w=800"]
   }
 ];
 
@@ -46,13 +120,6 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
 
   const photos = profile.photos && profile.photos.length > 0 ? profile.photos : [profile.img];
-
-  const Tag: React.FC<{ children: React.ReactNode, icon?: any }> = ({ children, icon: Icon }) => (
-    <div className="px-3 py-1.5 bg-slate-100 dark:bg-white/5 rounded-full flex items-center gap-1.5 border dark:border-white/10 border-black/5 shrink-0">
-      {Icon && <Icon size={10} className="text-yellow-500" />}
-      <span className="text-[9px] font-black uppercase tracking-widest dark:text-white/80">{children}</span>
-    </div>
-  );
 
   const SectionTitle: React.FC<{ children: React.ReactNode, icon: any }> = ({ children, icon: Icon }) => (
     <div className="flex items-center gap-2 opacity-30 mb-3">
@@ -138,6 +205,7 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
 const Discover: React.FC = () => {
   const { isPremium, openUpgrade } = useContext(PremiumContext);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [swipeCount, setSwipeCount] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
   const [showFilterLabel, setShowFilterLabel] = useState(false);
   const [filters, setFilters] = useState({
@@ -190,7 +258,10 @@ const Discover: React.FC = () => {
 
   const handleSwipe = (direction: 'left' | 'right') => {
     if (currentIndex >= filteredProfiles.length) return;
+    if (!isPremium && swipeCount >= 12) return;
+
     if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0;
+    
     gsap.to(cardRef.current, {
       x: direction === 'left' ? -1000 : 1000,
       opacity: 0,
@@ -198,12 +269,35 @@ const Discover: React.FC = () => {
       duration: 0.5,
       onComplete: () => {
         setCurrentIndex(prev => prev + 1);
+        setSwipeCount(prev => prev + 1);
         gsap.fromTo(cardRef.current, { x: 0, opacity: 0, rotate: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.4 });
       }
     });
   };
 
   const profile = filteredProfiles[currentIndex];
+  const isLimitReached = !isPremium && swipeCount >= 12;
+
+  if (isLimitReached) return (
+    <div className="h-full flex flex-col items-center justify-center p-8 text-center space-y-8 bg-white dark:bg-black">
+      <div className="relative">
+        <div className="w-24 h-24 bg-yellow-400 rounded-3xl flex items-center justify-center shadow-[0_20px_50px_rgba(250,204,21,0.3)] animate-pulse">
+          <LockKeyhole size={48} className="text-black" />
+        </div>
+        <div className="absolute -top-2 -right-2 bg-black dark:bg-white text-white dark:text-black w-10 h-10 rounded-full flex items-center justify-center border-4 border-white dark:border-black">
+          <Crown size={20} />
+        </div>
+      </div>
+      <div className="space-y-4 max-w-sm">
+        <h2 className="text-3xl lg:text-4xl font-black tracking-tighter uppercase leading-none dark:text-white">ORBITAL LIMIT REVEALED.</h2>
+        <p className="text-sm font-bold opacity-60 uppercase tracking-widest dark:text-white/60">You have reached your swipe limit for the day. Upgrade to get more likes and find your global resonance.</p>
+      </div>
+      <div className="flex flex-col w-full gap-3 max-w-xs">
+        <button onClick={openUpgrade} className="bg-yellow-400 text-black py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-yellow-400/20 active:scale-95 transition-all">Go Premium Now</button>
+        <button onClick={() => window.location.reload()} className="text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity dark:text-white">Refresh Tomorrow</button>
+      </div>
+    </div>
+  );
 
   if (!profile) return (
     <div className="h-full flex flex-col items-center justify-center p-6 text-center space-y-6">
@@ -212,15 +306,21 @@ const Discover: React.FC = () => {
         <h2 className="text-3xl font-black tracking-tighter uppercase dark:text-white">OUT OF ORBIT.</h2>
         <p className="text-xs font-bold opacity-40 uppercase tracking-widest dark:text-white/40">Broaden your filters to find more souls.</p>
       </div>
-      <button onClick={() => { setCurrentIndex(0); setShowFilters(true); }} className="bg-black dark:bg-white text-white dark:text-black px-10 py-4 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl active:scale-95 transition-all">Adjust Filters</button>
+      <button onClick={() => { setCurrentIndex(0); setSwipeCount(0); setShowFilters(true); }} className="bg-black dark:bg-white text-white dark:text-black px-10 py-4 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl active:scale-95 transition-all">Adjust Filters</button>
     </div>
   );
 
   return (
     <div className="h-full flex flex-col relative bg-white dark:bg-black overflow-hidden">
       {showFilters && (
-        <div className="absolute inset-0 z-[100] bg-black/90 backdrop-blur-2xl p-8 flex flex-col items-center justify-center animate-in fade-in duration-300">
-           <div className="w-full max-w-sm space-y-10">
+        <div 
+          className="absolute inset-0 z-[100] bg-black/90 backdrop-blur-2xl p-8 flex flex-col items-center justify-center animate-in fade-in duration-300"
+          onClick={() => setShowFilters(false)}
+        >
+           <div 
+            className="w-full max-w-sm space-y-10"
+            onClick={(e) => e.stopPropagation()}
+           >
               <div className="flex items-center justify-between">
                 <h3 className="text-3xl font-black text-white tracking-tighter uppercase">FILTERS<span className="text-yellow-400">.</span></h3>
                 <button onClick={() => setShowFilters(false)} className="p-2 bg-white/10 rounded-full text-white"><X size={20} /></button>
@@ -257,7 +357,7 @@ const Discover: React.FC = () => {
       )}
 
       <header className="px-5 py-3 flex items-center justify-between shrink-0 z-10 border-b dark:border-white/5 bg-white/50 dark:bg-black/50 backdrop-blur-xl">
-         <span className="text-[8px] font-black uppercase tracking-widest opacity-40 dark:text-white">Active Discovery</span>
+         <span className="text-[8px] font-black uppercase tracking-widest opacity-40 dark:text-white">Active Discovery • {swipeCount}/12 Pulse</span>
          <button 
             onClick={() => setShowFilters(true)} 
             className="flex items-center gap-2 p-2 px-3 bg-black/5 dark:bg-white/5 rounded-xl transition-all dark:text-white border dark:border-white/10 border-black/5 min-w-[44px] h-[40px] justify-center"
@@ -278,10 +378,12 @@ const Discover: React.FC = () => {
               <img src={profile.img} alt={profile.name} className="absolute inset-0 w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
               <div className="absolute bottom-0 left-0 w-full p-8 space-y-3">
-                 <div className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-400 rounded-lg w-fit">
-                     <ShieldCheck size={14} className="text-black" />
-                     <span className="text-[8px] font-black text-black uppercase tracking-widest">Verified Identity</span>
-                 </div>
+                 {profile.verified && (
+                   <div className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-400 rounded-lg w-fit">
+                       <ShieldCheck size={14} className="text-black" />
+                       <span className="text-[8px] font-black text-black uppercase tracking-widest">Verified Identity</span>
+                   </div>
+                 )}
                  <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-none uppercase">{profile.name}, {profile.age}</h2>
               </div>
             </div>
@@ -290,10 +392,7 @@ const Discover: React.FC = () => {
       </div>
 
       {/* Fixed Action Buttons - Adjusted position for Mobile */}
-      {/* TO ADJUST BUTTON POSITION: Change bottom-40 to different value */}
-      {/* Higher number = lower position, Lower number = higher position */}
-      {/* Examples: bottom-48 (lower), bottom-36 (higher), bottom-32 (even higher) */}
-      <div className="absolute bottom-40 md:bottom-12 left-0 w-full px-6 z-50">
+      <div className="absolute bottom-32 md:bottom-12 left-0 w-full px-6 z-50">
           <div className="max-w-xs mx-auto flex items-center justify-center gap-6 pointer-events-auto">
               <button onClick={() => handleSwipe('left')} className="w-14 h-14 bg-white dark:bg-zinc-900 border dark:border-white/10 rounded-full flex items-center justify-center text-black dark:text-white shadow-2xl active:scale-90 transition-all hover:bg-red-500 hover:text-white"><X size={28} /></button>
               <button onClick={openUpgrade} className="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center text-black shadow-2xl relative active:scale-90 transition-all hover:scale-110"><Star size={32} fill="currentColor" />{!isPremium && <Lock size={10} className="absolute top-4 right-4 text-red-600" />}</button>
