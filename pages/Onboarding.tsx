@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { 
   ArrowRight, ArrowLeft, Heart, Sparkles, Shield, User, MapPin, 
-  Upload, Navigation, X, Loader2
+  Upload, Navigation, X, Loader2, GraduationCap, Info, MessageSquare
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../App';
 
 type Step = {
@@ -39,15 +39,15 @@ const Onboarding: React.FC = () => {
 
   // Form State
   const [formData, setFormData] = useState({
-    name: '', dob: '', gender: '', phone: '', role: 'Visionary', education: '', location: '',
+    name: '', age: 25, dob: '', gender: 'Man', phone: '', role: 'Visionary', education: '', location: '',
     intent: 'Serious relationship', commitment: 'Very important',
     lookingFor: 'Women', // Men, Women, Everyone
     ageRange: [18, 50],
     traits: [] as string[], weekend: 'Exploring', drinks: 'Sometimes', smokes: 'No',
     values: [] as string[], languages: [] as string[], belief: 'Spiritual',
     children: 'Want someday', relocate: 'Maybe',
-    essentials: [] as string[], bio: '', prompt: 'Consistency and kindness.',
-    photos: [] as string[], verified: true 
+    essentials: [] as string[], bio: '', prompt: '',
+    photos: ['', '', '', ''], verified: true 
   });
 
   useEffect(() => {
@@ -79,13 +79,14 @@ const Onboarding: React.FC = () => {
         return;
       }
       
-      // Simulated Account Creation
+      // Simulated Account Creation - 8 Second Spinner
       setIsCreating(true);
       
       setTimeout(() => {
+        // Save to localStorage before navigating
         localStorage.setItem('aura_user_profile', JSON.stringify(formData));
         navigate('/otp');
-      }, 3000);
+      }, 8000);
     }
   };
 
@@ -165,7 +166,7 @@ const Onboarding: React.FC = () => {
               <Sparkles className="absolute -top-2 -right-2 text-yellow-400 animate-pulse" />
            </div>
            <div className="space-y-3">
-              <h2 className="text-3xl font-black tracking-tighter uppercase dark:text-white">SYNCHRONIZING ORBIT.</h2>
+              <h2 className="text-3xl font-black tracking-tighter uppercase dark:text-white leading-none">SYNCHRONIZING ORBIT.</h2>
               <p className="text-xs font-black uppercase tracking-[0.3em] opacity-40 animate-pulse dark:text-white">Creating account for user...</p>
            </div>
            <div className="pt-10 flex flex-col gap-2">
@@ -226,6 +227,19 @@ const Onboarding: React.FC = () => {
               <div className="space-y-3">
                 <label className="text-[10px] font-black uppercase tracking-widest opacity-30 ml-2">1. Essence Name</label>
                 <input value={formData.name} onChange={e => updateField('name', e.target.value)} placeholder="E.g. Julian" className="w-full py-5 px-8 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-2xl focus:border-yellow-400 outline-none font-bold text-lg dark:text-white" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-widest opacity-30 ml-2">Age</label>
+                  <input type="number" value={formData.age} onChange={e => updateField('age', parseInt(e.target.value))} className="w-full py-5 px-8 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-2xl focus:border-yellow-400 outline-none font-bold text-lg dark:text-white" />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-widest opacity-30 ml-2">Education</label>
+                  <div className="relative">
+                    <GraduationCap className="absolute left-6 top-1/2 -translate-y-1/2 text-yellow-400" size={18} />
+                    <input value={formData.education} onChange={e => updateField('education', e.target.value)} placeholder="Degree/Uni" className="w-full py-5 px-16 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-2xl focus:border-yellow-400 outline-none font-bold text-lg dark:text-white" />
+                  </div>
+                </div>
               </div>
               <div className="space-y-3">
                 <label className="text-[10px] font-black uppercase tracking-widest opacity-30 ml-2">2. Identity Origin (Gender)</label>
@@ -321,9 +335,21 @@ const Onboarding: React.FC = () => {
 
           {currentStep === 6 && (
             <div className="space-y-8">
-              <div className="space-y-4">
-                <label className="text-[10px] font-black uppercase tracking-widest opacity-30 ml-2">9. The Soul Narrative (Bio)</label>
-                <textarea rows={5} value={formData.bio} onChange={e => updateField('bio', e.target.value)} placeholder="Describe your frequency..." className="w-full p-6 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-[24px] outline-none focus:border-yellow-400 italic text-lg dark:text-white" />
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 opacity-30">
+                    <Info size={12} className="dark:text-white" />
+                    <label className="text-[10px] font-black uppercase tracking-widest ml-1">9. The Soul Narrative (Bio)</label>
+                  </div>
+                  <textarea rows={4} value={formData.bio} onChange={e => updateField('bio', e.target.value)} placeholder="Describe your frequency..." className="w-full p-6 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-[24px] outline-none focus:border-yellow-400 italic text-lg dark:text-white" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 opacity-30">
+                    <MessageSquare size={12} className="dark:text-white" />
+                    <label className="text-[10px] font-black uppercase tracking-widest ml-1">10. Resonance Trigger (Prompt)</label>
+                  </div>
+                  <input value={formData.prompt} onChange={e => updateField('prompt', e.target.value)} placeholder="What starts a deep conversation for you?" className="w-full py-5 px-8 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-2xl focus:border-yellow-400 outline-none font-bold text-lg dark:text-white" />
+                </div>
               </div>
             </div>
           )}
@@ -331,14 +357,14 @@ const Onboarding: React.FC = () => {
           {currentStep === 7 && (
             <div className="space-y-10">
                <div className="space-y-6">
-                 <label className="text-[10px] font-black uppercase tracking-widest opacity-30 text-center block dark:text-white/40">10. Quad Presence Presence (4 Gallery Photos Required)</label>
+                 <label className="text-[10px] font-black uppercase tracking-widest opacity-30 text-center block dark:text-white/40">11. Quad Presence Presence (4 Gallery Photos Required)</label>
                  <div className="grid grid-cols-2 gap-4">
                     {[0, 1, 2, 3].map(idx => (
                       <div key={idx} onClick={() => triggerUpload(idx)} className="aspect-square rounded-2xl overflow-hidden border-2 border-dashed border-yellow-400/20 hover:border-yellow-400 transition-all cursor-pointer relative group bg-black/5 dark:bg-white/5 flex flex-col items-center justify-center gap-3">
                          {formData.photos[idx] ? (
                            <>
                              <img src={formData.photos[idx]} className="w-full h-full object-cover" />
-                             <div className="absolute top-2 right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-black"><Sparkles size={12} /></div>
+                             <div className="absolute top-2 right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-black shadow-lg"><Sparkles size={12} /></div>
                            </>
                          ) : (
                            <>
