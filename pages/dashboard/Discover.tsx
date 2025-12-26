@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import gsap from 'gsap';
 import { 
@@ -291,7 +290,10 @@ const Discover: React.FC = () => {
       </div>
 
       {/* Fixed Action Buttons - Adjusted position for Mobile */}
-      <div className="absolute bottom-32 md:bottom-12 left-0 w-full px-6 z-50">
+      {/* TO ADJUST BUTTON POSITION: Change bottom-40 to different value */}
+      {/* Higher number = lower position, Lower number = higher position */}
+      {/* Examples: bottom-48 (lower), bottom-36 (higher), bottom-32 (even higher) */}
+      <div className="absolute bottom-40 md:bottom-12 left-0 w-full px-6 z-50">
           <div className="max-w-xs mx-auto flex items-center justify-center gap-6 pointer-events-auto">
               <button onClick={() => handleSwipe('left')} className="w-14 h-14 bg-white dark:bg-zinc-900 border dark:border-white/10 rounded-full flex items-center justify-center text-black dark:text-white shadow-2xl active:scale-90 transition-all hover:bg-red-500 hover:text-white"><X size={28} /></button>
               <button onClick={openUpgrade} className="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center text-black shadow-2xl relative active:scale-90 transition-all hover:scale-110"><Star size={32} fill="currentColor" />{!isPremium && <Lock size={10} className="absolute top-4 right-4 text-red-600" />}</button>
