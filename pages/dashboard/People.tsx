@@ -10,8 +10,14 @@ const People: React.FC = () => {
     <div className="h-full overflow-y-auto no-scrollbar p-6 lg:p-12 space-y-8 relative">
       {/* Profile Detail Modal */}
       {selectedProfile && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-3xl p-0 lg:p-12 overflow-y-auto no-scrollbar scroll-smooth animate-in fade-in duration-500">
-           <div className="max-w-4xl mx-auto bg-white dark:bg-black lg:rounded-[60px] relative shadow-2xl border dark:border-white/10 border-black/5">
+        <div 
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-3xl p-0 lg:p-12 overflow-y-auto no-scrollbar scroll-smooth animate-in fade-in duration-500"
+          onClick={() => setSelectedProfile(null)}
+        >
+           <div 
+            className="max-w-4xl mx-auto bg-white dark:bg-black lg:rounded-[60px] relative shadow-2xl border dark:border-white/10 border-black/5"
+            onClick={(e) => e.stopPropagation()}
+           >
               
               {/* Close Button */}
               <button 

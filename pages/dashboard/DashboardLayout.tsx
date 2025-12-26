@@ -1,3 +1,4 @@
+
 import React, { useEffect, useContext, useMemo, useState, createContext, useRef } from 'react';
 import { Outlet, NavLink, useLocation, Link } from 'react-router-dom';
 import { Heart, Users, Star, MessageSquare, User, Sparkles, LogOut, Settings, Globe, Radio, X, Check, Zap, Crown, Shield, Sun, Moon } from 'lucide-react';
@@ -25,25 +26,15 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
     );
   }, []);
 
- const plans = [
-    { 
-      id: 'free', 
-      name: 'Free Pulse', 
-      price: '$0', 
-      period: '', 
-      desc: 'Starter resonance',
-      swipes: '12 Swipes / Day',
-      features: ['Basic Discovery', 'Limited Range', 'Daily Refresh'],
-      limited: true
-    },
+  const plans = [
     { 
       id: 'monthly', 
       name: 'Standard Orbit', 
-      price: '$19.99', 
+      price: '$9.99', 
       period: '/ mo', 
-      desc: 'Basic resonance',
-      swipes: '50 Swipes / Day',
-      features: ['35 Daily Pulses', 'See who Liked', 'Local Range']
+      desc: 'Core resonance',
+      swipes: '150 Swipes / Day',
+      features: ['150 Daily Pulses', 'See who Liked', 'Global Range']
     },
     { 
       id: 'semi', 
@@ -52,8 +43,8 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
       period: '/ 6 mo', 
       desc: 'High frequency', 
       popular: true,
-      swipes: '100 Swipes / Day',
-      features: ['100 Daily Pulses', 'Priority Nodes', '10 Soul Gifts']
+      swipes: '500 Swipes / Day',
+      features: ['500 Daily Pulses', 'Priority Nodes', '10 Soul Gifts']
     },
     { 
       id: 'annual', 
@@ -61,17 +52,22 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
       price: '$79.99', 
       period: '/ yr', 
       desc: 'Ultimate reach',
-      swipes: '200 Swipes / Day',
-      features: ['200 Daily Pulses', 'Soul Mapping', 'Priority Support']
+      swipes: 'Infinite Swipes',
+      features: ['Infinite Pulses', 'Soul Mapping', 'Priority Support']
     },
   ];
+
   const currentPlan = plans.find(p => p.id === selectedPlan) || plans[1];
 
   return (
-    <div className="fixed inset-0 z-[2000] bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4">
+    <div 
+      className="fixed inset-0 z-[2000] bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4"
+      onClick={onClose}
+    >
       <div 
         ref={modalContainerRef} 
         className="w-full max-w-xl bg-white dark:bg-black rounded-[24px] max-h-[90vh] overflow-y-auto no-scrollbar border dark:border-white/10 border-black/5 shadow-2xl relative"
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="p-8 lg:p-10">
           <button onClick={onClose} className="absolute top-5 right-5 p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all z-50">
@@ -102,9 +98,6 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
                 <div className="flex items-baseline gap-1">
                   <span className="text-xl font-black">{plan.price}</span>
                   <span className="text-[7px] font-bold opacity-40">{plan.period}</span>
-                </div>
-                <div className="mt-2 text-[6px] font-black uppercase tracking-widest text-yellow-500 opacity-80">
-                  {plan.swipes}
                 </div>
               </button>
             ))}
@@ -191,7 +184,7 @@ const DashboardLayout: React.FC = () => {
             {!isPremium && (
               <button onClick={() => setShowUpgrade(true)} className="w-full bg-yellow-400/10 text-yellow-400 p-3 rounded-xl border border-yellow-400/20 text-left hover:bg-yellow-400/20 transition-all">
                 <span className="text-[6px] font-black uppercase tracking-widest block mb-0.5">Upgrade</span>
-                <span className="text-[8px] font-bold opacity-70 leading-none truncate block">Only 20 swipes/day</span>
+                <span className="text-[8px] font-bold opacity-70 leading-none truncate block">Infinite resonance.</span>
               </button>
             )}
             <Link to="/" className="flex items-center gap-2 px-3 py-2 opacity-30 hover:opacity-100 transition-opacity font-black text-[8px] uppercase tracking-widest"><LogOut size={14} />Logout</Link>

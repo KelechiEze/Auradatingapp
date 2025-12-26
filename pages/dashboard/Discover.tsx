@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import gsap from 'gsap';
 import { 
@@ -46,13 +47,6 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
 
   const photos = profile.photos && profile.photos.length > 0 ? profile.photos : [profile.img];
-
-  const Tag: React.FC<{ children: React.ReactNode, icon?: any }> = ({ children, icon: Icon }) => (
-    <div className="px-3 py-1.5 bg-slate-100 dark:bg-white/5 rounded-full flex items-center gap-1.5 border dark:border-white/10 border-black/5 shrink-0">
-      {Icon && <Icon size={10} className="text-yellow-500" />}
-      <span className="text-[9px] font-black uppercase tracking-widest dark:text-white/80">{children}</span>
-    </div>
-  );
 
   const SectionTitle: React.FC<{ children: React.ReactNode, icon: any }> = ({ children, icon: Icon }) => (
     <div className="flex items-center gap-2 opacity-30 mb-3">
@@ -219,8 +213,14 @@ const Discover: React.FC = () => {
   return (
     <div className="h-full flex flex-col relative bg-white dark:bg-black overflow-hidden">
       {showFilters && (
-        <div className="absolute inset-0 z-[100] bg-black/90 backdrop-blur-2xl p-8 flex flex-col items-center justify-center animate-in fade-in duration-300">
-           <div className="w-full max-w-sm space-y-10">
+        <div 
+          className="absolute inset-0 z-[100] bg-black/90 backdrop-blur-2xl p-8 flex flex-col items-center justify-center animate-in fade-in duration-300"
+          onClick={() => setShowFilters(false)}
+        >
+           <div 
+            className="w-full max-w-sm space-y-10"
+            onClick={(e) => e.stopPropagation()}
+           >
               <div className="flex items-center justify-between">
                 <h3 className="text-3xl font-black text-white tracking-tighter uppercase">FILTERS<span className="text-yellow-400">.</span></h3>
                 <button onClick={() => setShowFilters(false)} className="p-2 bg-white/10 rounded-full text-white"><X size={20} /></button>
@@ -290,10 +290,7 @@ const Discover: React.FC = () => {
       </div>
 
       {/* Fixed Action Buttons - Adjusted position for Mobile */}
-      {/* TO ADJUST BUTTON POSITION: Change bottom-40 to different value */}
-      {/* Higher number = lower position, Lower number = higher position */}
-      {/* Examples: bottom-48 (lower), bottom-36 (higher), bottom-32 (even higher) */}
-      <div className="absolute bottom-40 md:bottom-12 left-0 w-full px-6 z-50">
+      <div className="absolute bottom-32 md:bottom-12 left-0 w-full px-6 z-50">
           <div className="max-w-xs mx-auto flex items-center justify-center gap-6 pointer-events-auto">
               <button onClick={() => handleSwipe('left')} className="w-14 h-14 bg-white dark:bg-zinc-900 border dark:border-white/10 rounded-full flex items-center justify-center text-black dark:text-white shadow-2xl active:scale-90 transition-all hover:bg-red-500 hover:text-white"><X size={28} /></button>
               <button onClick={openUpgrade} className="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center text-black shadow-2xl relative active:scale-90 transition-all hover:scale-110"><Star size={32} fill="currentColor" />{!isPremium && <Lock size={10} className="absolute top-4 right-4 text-red-600" />}</button>

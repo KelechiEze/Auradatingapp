@@ -6,7 +6,8 @@ import {
   MoreVertical, X, Sparkles, Camera, Archive, Trash, UserX, Calendar, 
   Music, MapPin, Heart, Shield, Image as ImageIcon, FileText, Gift, 
   Trash2, Play, Pause, Edit3, PhoneCall, Info, Briefcase, User, Clock, 
-  CheckCircle, Navigation, RotateCcw, Check, Pin, Star, MicOff, CameraOff
+  CheckCircle, Navigation, RotateCcw, Check, Pin, Star, MicOff, CameraOff,
+  AlertTriangle
 } from 'lucide-react';
 import { PremiumContext } from './DashboardLayout';
 
@@ -58,8 +59,14 @@ const DateScheduleModal = ({ onClose, onSend }: { onClose: () => void, onSend: (
   const [locationType, setLocationType] = useState<'Indoor' | 'Outdoor'>('Indoor');
 
   return (
-    <div className="fixed inset-0 z-[3000] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6 animate-in zoom-in-95 duration-300">
-      <div className="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-[20px] p-8 space-y-6 border dark:border-white/10 shadow-2xl relative">
+    <div 
+      className="fixed inset-0 z-[3000] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6 animate-in zoom-in-95 duration-300"
+      onClick={onClose}
+    >
+      <div 
+        className="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-[20px] p-8 space-y-6 border dark:border-white/10 shadow-2xl relative"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button onClick={onClose} className="absolute top-6 right-6 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5"><X size={20} /></button>
         <div className="text-center space-y-2">
            <div className="w-12 h-12 bg-yellow-400 rounded-xl mx-auto flex items-center justify-center text-black shadow-lg"><Calendar size={24} /></div>
@@ -88,6 +95,42 @@ const DateScheduleModal = ({ onClose, onSend }: { onClose: () => void, onSend: (
         >
           Initialize Invitation
         </button>
+      </div>
+    </div>
+  );
+};
+
+const DeleteConfirmationModal = ({ onConfirm, onCancel }: { onConfirm: () => void, onCancel: () => void }) => {
+  return (
+    <div 
+      className="fixed inset-0 z-[4000] bg-black/80 backdrop-blur-xl flex items-center justify-center p-6 animate-in fade-in zoom-in-95 duration-200"
+      onClick={onCancel}
+    >
+      <div 
+        className="w-full max-w-xs bg-white dark:bg-zinc-900 rounded-[32px] p-8 border dark:border-white/10 shadow-2xl space-y-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 bg-red-500/10 text-red-500 rounded-2xl mx-auto flex items-center justify-center">
+            <AlertTriangle size={32} />
+          </div>
+          <h3 className="text-xl font-black tracking-tighter uppercase dark:text-white">Dissolve Resonance?</h3>
+          <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest dark:text-white">This message pulse will be purged from the timeline forever.</p>
+        </div>
+        <div className="space-y-3">
+          <button 
+            onClick={onConfirm}
+            className="w-full bg-red-500 text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-red-500/20 active:scale-95 transition-all"
+          >
+            Yes, Purge
+          </button>
+          <button 
+            onClick={onCancel}
+            className="w-full bg-slate-100 dark:bg-white/5 dark:text-white text-black py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-black/5 transition-all"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -256,8 +299,14 @@ const CallScreen = ({ type, chat, onClose, onSwitchToVideo }: { type: 'voice' | 
 
 const ResonanceOverlay = ({ chat, onClose }: { chat: any, onClose: () => void }) => {
   return (
-    <div className="fixed inset-0 z-[1000] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4 animate-in fade-in zoom-in-95 duration-300 overflow-y-auto no-scrollbar">
-      <div className="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-[24px] overflow-hidden border dark:border-white/10 shadow-2xl relative">
+    <div 
+      className="fixed inset-0 z-[1000] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4 animate-in fade-in zoom-in-95 duration-300 overflow-y-auto no-scrollbar"
+      onClick={onClose}
+    >
+      <div 
+        className="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-[24px] overflow-hidden border dark:border-white/10 shadow-2xl relative"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button 
           onClick={onClose} 
           className="absolute top-5 right-5 z-20 w-12 h-12 bg-black/50 backdrop-blur-md rounded-xl text-white flex items-center justify-center hover:bg-yellow-400 hover:text-black transition-all"
@@ -322,6 +371,7 @@ const ChatRoom = ({ chat, onBack, onDeleteMessage }: { chat: ChatItem, onBack: (
   const [showPlusMenu, setShowPlusMenu] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [activeCall, setActiveCall] = useState<'voice' | 'video' | null>(null);
+  const [messageToDelete, setMessageToDelete] = useState<number | null>(null);
   
   // Audio playback state for existing messages
   const [playingMsgId, setPlayingMsgId] = useState<number | null>(null);
@@ -483,6 +533,7 @@ const ChatRoom = ({ chat, onBack, onDeleteMessage }: { chat: ChatItem, onBack: (
 
   const removeMessage = (id: number) => {
     setMessages(messages.filter(m => m.id !== id));
+    setMessageToDelete(null);
   };
 
   const handlePlusAction = (type: 'image' | 'file' | 'location') => {
@@ -580,7 +631,7 @@ const ChatRoom = ({ chat, onBack, onDeleteMessage }: { chat: ChatItem, onBack: (
                  )}
               </div>
            </div>
-           <button onClick={() => removeMessage(m.id)} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg"><Trash size={12} /></button>
+           <button onClick={() => setMessageToDelete(m.id)} className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg"><Trash size={12} /></button>
         </div>
       );
     }
@@ -601,7 +652,7 @@ const ChatRoom = ({ chat, onBack, onDeleteMessage }: { chat: ChatItem, onBack: (
                <span className="text-[7px] font-black uppercase tracking-widest opacity-40">{m.voiceDuration}</span>
             </div>
           </div>
-          <button onClick={() => removeMessage(m.id)} className={`absolute -top-2 ${m.sender === 'me' ? '-left-2' : '-right-2'} w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg`}><Trash size={12} /></button>
+          <button onClick={() => setMessageToDelete(m.id)} className={`absolute -top-2 ${m.sender === 'me' ? '-left-2' : '-right-2'} w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg`}><Trash size={12} /></button>
         </div>
       );
     }
@@ -615,7 +666,7 @@ const ChatRoom = ({ chat, onBack, onDeleteMessage }: { chat: ChatItem, onBack: (
                  <span className="text-[6px] font-black opacity-40 uppercase tracking-widest">{m.time}</span>
               </div>
            </div>
-           <button onClick={() => removeMessage(m.id)} className={`absolute -top-2 ${m.sender === 'me' ? '-left-2' : '-right-2'} w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg`}><Trash size={12} /></button>
+           <button onClick={() => setMessageToDelete(m.id)} className={`absolute -top-2 ${m.sender === 'me' ? '-left-2' : '-right-2'} w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg`}><Trash size={12} /></button>
         </div>
       );
     }
@@ -626,7 +677,7 @@ const ChatRoom = ({ chat, onBack, onDeleteMessage }: { chat: ChatItem, onBack: (
             <p className="text-xs font-medium leading-relaxed">{m.text}</p>
             <span className="text-[6px] font-black mt-1.5 block opacity-40 uppercase tracking-widest">{m.time}</span>
          </div>
-         <button onClick={() => removeMessage(m.id)} className={`absolute -top-2 ${m.sender === 'me' ? '-left-2' : '-right-2'} w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg`}><Trash size={12} /></button>
+         <button onClick={() => setMessageToDelete(m.id)} className={`absolute -top-2 ${m.sender === 'me' ? '-left-2' : '-right-2'} w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg`}><Trash size={12} /></button>
       </div>
     );
   };
@@ -643,6 +694,13 @@ const ChatRoom = ({ chat, onBack, onDeleteMessage }: { chat: ChatItem, onBack: (
         />
       )}
       {showDateModal && <DateScheduleModal onClose={() => setShowDateModal(false)} onSend={(details) => handleSend('date_invite', details)} />}
+      
+      {messageToDelete !== null && (
+        <DeleteConfirmationModal 
+          onConfirm={() => removeMessage(messageToDelete)} 
+          onCancel={() => setMessageToDelete(null)} 
+        />
+      )}
       
       <header className="px-4 py-3 border-b dark:border-white/10 flex items-center justify-between shrink-0 bg-inherit/90 backdrop-blur-xl z-[220] relative">
         <div className="flex items-center gap-3">

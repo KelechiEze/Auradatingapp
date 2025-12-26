@@ -78,8 +78,15 @@ const SettingsPage: React.FC = () => {
     <div ref={containerRef} className="p-6 lg:p-12 space-y-12 pb-32 relative">
       {/* Deactivate Modal */}
       {showDeactivateModal && (
-        <div className="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-xl flex items-center justify-center p-6">
-          <div ref={modalRef} className="w-full max-w-lg bg-white dark:bg-black rounded-[50px] p-10 lg:p-16 border dark:border-white/10 border-black/5 shadow-2xl space-y-8">
+        <div 
+          className="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-xl flex items-center justify-center p-6"
+          onClick={() => setShowDeactivateModal(false)}
+        >
+          <div 
+            ref={modalRef} 
+            className="w-full max-w-lg bg-white dark:bg-black rounded-[50px] p-10 lg:p-16 border dark:border-white/10 border-black/5 shadow-2xl space-y-8"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="text-center space-y-4">
               <div className="w-20 h-20 bg-red-500/10 text-red-500 rounded-3xl mx-auto flex items-center justify-center">
                 <AlertTriangle size={40} />
