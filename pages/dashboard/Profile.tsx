@@ -1,7 +1,8 @@
 
-import React, { useContext, useEffect, useState } from 'react';
-import { Settings, Edit2, ShieldCheck, Star, Heart, MapPin, Briefcase, GraduationCap, Phone, Zap, Globe, Sparkles, Crown } from 'lucide-react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
+import { Settings, Edit2, ShieldCheck, Star, Heart, MapPin, Briefcase, GraduationCap, Phone, Zap, Globe, Sparkles, Crown, Upload, Save, X, Info, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import gsap from 'gsap';
 import { ThemeContext } from '../../App';
 import { PremiumContext } from './DashboardLayout';
 
@@ -10,178 +11,296 @@ const Profile: React.FC = () => {
   const { isDark } = useContext(ThemeContext);
   const { isPremium, openUpgrade } = useContext(PremiumContext);
   const [myData, setMyData] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState<any>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const savedData = localStorage.getItem('aura_user_profile');
+    const defaultData = {
+      name: "Sarah",
+      age: 26,
+      phone: "+234 901 000 0000",
+      role: "UX Designer",
+      education: "Visual Arts Degree",
+      location: "Lagos, Nigeria",
+      intent: "Serious relationship",
+      lookingFor: 'Men',
+      traits: ["Creative", "Introverted", "Romantic"],
+      weekend: "Exploring new places",
+      drinks: "Sometimes",
+      smokes: "No",
+      values: ["Growth", "Honesty", "Loyalty"],
+      languages: ["English", "French"],
+      belief: "Spiritual",
+      children: "Want someday",
+      relocate: "Maybe",
+      essentials: ["Music", "Travel", "Faith"],
+      bio: "I love deep conversations, spontaneous trips, and people who can make me laugh. Looking for my partner in crime.",
+      prompt: "Consistency and kindness are my love languages.",
+      photos: [
+        'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80&w=400',
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400'
+      ]
+    };
+
     if (savedData) {
       setMyData(JSON.parse(savedData));
+      setEditForm(JSON.parse(savedData));
     } else {
-      setMyData({
-        name: "Sarah",
-        age: 26,
-        phone: "+234 901 000 0000",
-        role: "UX Designer",
-        education: "Unilag 2019",
-        location: "Lagos, Nigeria",
-        intent: "Serious relationship",
-        commitment: "Very important",
-        traits: ["Creative", "Introverted", "Romantic"],
-        weekend: "Exploring new places",
-        drinks: "Sometimes",
-        smokes: "No",
-        values: ["Growth", "Honesty", "Family"],
-        languages: ["English", "French", "Yoruba"],
-        belief: "Spiritual",
-        children: "Want someday",
-        relocate: "Maybe",
-        essentials: ["Music", "Travel", "Faith"],
-        bio: "I love deep conversations, spontaneous trips, and people who can make me laugh. Looking for my partner in crime.",
-        prompt: "Consistency and kindness."
-      });
+      setMyData(defaultData);
+      setEditForm(defaultData);
     }
   }, []);
 
-  if (!myData) return null;
+  useEffect(() => {
+    if (profileRef.current) {
+      gsap.fromTo(profileRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 });
+    }
+  }, [isEditing]);
+
+  const handleSave = () => {
+    setMyData(editForm);
+    localStorage.setItem('aura_user_profile', JSON.stringify(editForm));
+    setIsEditing(false);
+  };
+
+  const toggleItem = (field: string, item: string) => {
+    const current = editForm[field] || [];
+    if (current.includes(item)) {
+      setEditForm({ ...editForm, [field]: current.filter((i: string) => i !== item) });
+    } else {
+      setEditForm({ ...editForm, [field]: [...current, item] });
+    }
+  };
+
+  if (!myData || !editForm) return null;
 
   return (
-    <div className="p-6 lg:p-12 space-y-12 pb-32">
+    <div ref={profileRef} className="p-4 lg:p-10 space-y-10 pb-32 max-w-5xl mx-auto">
+      {/* Header */}
       <div className="flex items-center justify-between">
-         <div className="flex items-center gap-4">
-            <h2 className="text-4xl lg:text-6xl font-black tracking-tighter">PROFILE.</h2>
+         <div className="flex items-center gap-3">
+            <h2 className="text-3xl lg:text-5xl font-black tracking-tighter uppercase dark:text-white">
+              {isEditing ? 'SYNC IDENTITY.' : 'PROFILE.'}
+            </h2>
             {isPremium && (
-              <div className="px-4 py-1.5 bg-yellow-400 text-black rounded-full flex items-center gap-2 shadow-lg shadow-yellow-400/20">
-                <Crown size={14} fill="currentColor" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Premium Signal</span>
+              <div className="px-3 py-1 bg-yellow-400 text-black rounded-full flex items-center gap-2 shadow-lg">
+                <Crown size={12} fill="currentColor" />
+                <span className="text-[8px] font-black uppercase tracking-widest">Elite Member</span>
               </div>
             )}
          </div>
-         <div className="flex gap-4">
-           <button 
-             onClick={() => navigate('/dashboard/settings')}
-             className="w-14 h-14 bg-slate-100 dark:bg-white/5 rounded-2xl flex items-center justify-center hover:bg-yellow-400 hover:text-black transition-all"
-           >
-             <Settings size={24} />
-           </button>
+         <div className="flex items-center gap-3">
+            {isEditing ? (
+              <>
+                <button onClick={() => setIsEditing(false)} className="w-12 h-12 bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                  <X size={20} />
+                </button>
+                <button onClick={handleSave} className="px-6 h-12 bg-yellow-400 text-black rounded-xl flex items-center gap-2 font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 transition-all">
+                  <Save size={16} /> Save Sync
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => setIsEditing(true)} className="w-12 h-12 bg-yellow-400 text-black rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg">
+                  <Edit2 size={20} />
+                </button>
+                <button onClick={() => navigate('/dashboard/settings')} className="w-12 h-12 bg-slate-100 dark:bg-white/5 rounded-xl flex items-center justify-center hover:bg-yellow-400 hover:text-black transition-all dark:text-white">
+                  <Settings size={20} />
+                </button>
+              </>
+            )}
          </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        {/* LEFT PANEL */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        {/* Photos Column */}
         <div className="lg:col-span-5 space-y-8">
-           <div className="relative group">
-              <div className="aspect-[4/5] rounded-[60px] overflow-hidden border-4 border-yellow-400 shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]">
-                 <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80&w=800" alt="Me" className="w-full h-full object-cover" />
+           <div className="space-y-4">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 ml-4 dark:text-white">Resonance Visuals</h4>
+              <div className="grid grid-cols-2 gap-3">
+                 <div className="aspect-[3/4] col-span-2 relative group rounded-[40px] overflow-hidden border-4 border-yellow-400 shadow-2xl bg-black/5">
+                    <img src={myData.photos?.[0]} className="w-full h-full object-cover" />
+                    <button className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-md p-3 rounded-2xl text-white hover:bg-yellow-400 hover:text-black transition-all"><Upload size={16} /></button>
+                 </div>
+                 <div className="aspect-[3/4] relative rounded-3xl overflow-hidden shadow-xl border-2 dark:border-white/10 bg-black/5">
+                    <img src={myData.photos?.[1]} className="w-full h-full object-cover" />
+                    <button className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><Upload size={16} className="text-white" /></button>
+                 </div>
+                 <div className="aspect-[3/4] relative rounded-3xl overflow-hidden shadow-xl border-2 dark:border-white/10 bg-black/5">
+                    <img src={myData.photos?.[2]} className="w-full h-full object-cover" />
+                    <button className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><Upload size={16} className="text-white" /></button>
+                 </div>
               </div>
-              <button className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-black text-white dark:bg-white dark:text-black px-10 py-5 rounded-[24px] font-black text-xs tracking-widest uppercase flex items-center gap-3 shadow-2xl hover:scale-110 active:scale-95 transition-all">
-                 <Edit2 size={16} />
-                 Edit Presence
-              </button>
            </div>
 
-           <div className="pt-8 text-center space-y-2">
-              <div className="flex items-center justify-center gap-3">
-                 <h3 className="text-4xl font-black tracking-tighter">{myData.name}{myData.age ? `, ${myData.age}` : ''}</h3>
-                 <ShieldCheck size={32} className="text-yellow-400" />
+           <div className="text-center pt-4">
+              <div className="flex items-center justify-center gap-2">
+                 {isEditing ? (
+                   <div className="flex items-center gap-2">
+                     <input 
+                       value={editForm.name} 
+                       onChange={e => setEditForm({...editForm, name: e.target.value})} 
+                       className="bg-transparent border-b-2 border-yellow-400 outline-none text-2xl font-black tracking-tighter dark:text-white text-center w-32"
+                     />
+                     <span className="text-2xl font-black">,</span>
+                     <input 
+                       type="number"
+                       value={editForm.age} 
+                       onChange={e => setEditForm({...editForm, age: parseInt(e.target.value)})} 
+                       className="bg-transparent border-b-2 border-yellow-400 outline-none text-2xl font-black tracking-tighter dark:text-white text-center w-16"
+                     />
+                   </div>
+                 ) : (
+                   <h3 className="text-3xl font-black tracking-tighter dark:text-white">{myData.name}, {myData.age}</h3>
+                 )}
+                 <ShieldCheck size={24} className="text-yellow-400" />
               </div>
-              <p className="opacity-40 font-black uppercase tracking-[0.4em] text-[10px]">Frequency Verified Member</p>
+              <p className="text-[8px] font-black uppercase tracking-[0.5em] opacity-40 dark:text-white">Active Resonance Identity</p>
            </div>
 
-           {!isPremium && (
-             <div className="p-8 bg-yellow-400 rounded-[40px] space-y-4 shadow-xl shadow-yellow-400/20 relative overflow-hidden group">
+           {!isPremium && !isEditing && (
+             <div className="p-8 bg-yellow-400 rounded-[40px] shadow-xl shadow-yellow-400/20 relative overflow-hidden group">
                 <Sparkles className="absolute -top-6 -right-6 text-black/10 scale-[2.5] group-hover:rotate-45 transition-transform duration-1000" />
                 <div className="relative z-10">
-                   <div className="flex items-center gap-2 mb-2 text-black">
-                      <Crown size={20} fill="currentColor" />
-                      <span className="text-[10px] font-black uppercase tracking-widest">Aura Elite</span>
-                   </div>
-                   <h4 className="text-2xl font-black text-black leading-tight">Elevate your resonance globally.</h4>
-                   <p className="text-black/60 text-xs font-bold mt-2">Unlock unlimited pulses and call signals for $9.99/mo.</p>
-                   <button 
-                     onClick={openUpgrade}
-                     className="mt-6 w-full bg-black text-white py-4 rounded-2xl font-black text-xs tracking-widest uppercase hover:scale-105 transition-all shadow-xl"
-                   >
-                     Upgrade Now
-                   </button>
+                   <h4 className="text-2xl font-black text-black leading-tight">Elevate your reach.</h4>
+                   <p className="text-black/60 text-[10px] font-bold mt-2 uppercase tracking-widest">Join Elite for unlimited resonance.</p>
+                   <button onClick={openUpgrade} className="mt-6 w-full bg-black text-white py-4 rounded-2xl font-black text-[10px] tracking-widest uppercase hover:scale-105 transition-all">Go Premium</button>
                 </div>
              </div>
            )}
-
-           <div className="grid grid-cols-3 gap-4">
-               <div className="bg-slate-50 dark:bg-white/5 p-6 rounded-[40px] text-center space-y-2 border border-black/5 dark:border-white/10 group hover:border-yellow-400 transition-colors">
-                  <Heart size={20} className="mx-auto text-yellow-400" fill="currentColor" />
-                  <div className="text-2xl font-black tracking-tighter">1.2k</div>
-                  <div className="text-[8px] font-black opacity-30 uppercase tracking-widest">Resonances</div>
-               </div>
-               <div className="bg-slate-50 dark:bg-white/5 p-6 rounded-[40px] text-center space-y-2 border border-black/5 dark:border-white/10 group hover:border-yellow-400 transition-colors">
-                  <Zap size={20} className="mx-auto text-yellow-400" fill="currentColor" />
-                  <div className="text-2xl font-black tracking-tighter">84%</div>
-                  <div className="text-[8px] font-black opacity-30 uppercase tracking-widest">Match Strength</div>
-               </div>
-               <div className="bg-slate-50 dark:bg-white/5 p-6 rounded-[40px] text-center space-y-2 border border-black/5 dark:border-white/10 group hover:border-yellow-400 transition-colors">
-                  <Globe size={20} className="mx-auto text-yellow-400" />
-                  <div className="text-2xl font-black tracking-tighter">9k</div>
-                  <div className="text-[8px] font-black opacity-30 uppercase tracking-widest">Orbit Range</div>
-               </div>
-           </div>
         </div>
 
-        {/* RIGHT PANEL */}
+        {/* Form Column */}
         <div className="lg:col-span-7 space-y-8">
-           <div className="bg-slate-50 dark:bg-white/5 p-8 rounded-[40px] border border-black/5 dark:border-white/10 space-y-8">
+           <div className="bg-slate-50 dark:bg-zinc-900 p-8 rounded-[40px] border border-black/5 dark:border-white/5 space-y-10 shadow-sm">
+              
+              {/* Bio Section */}
               <div className="space-y-4">
-                 <h4 className="text-xs font-black uppercase tracking-widest opacity-40">The Narrative</h4>
-                 <p className="text-2xl italic font-light leading-snug">"{myData.bio || "Sharing my soul through global resonance..."}"</p>
+                 <div className="flex items-center gap-2 opacity-30">
+                    <Info size={12} className="dark:text-white" />
+                    <h4 className="text-[10px] font-black uppercase tracking-widest dark:text-white">Soul Narrative</h4>
+                 </div>
+                 {isEditing ? (
+                   <textarea 
+                     rows={4} 
+                     value={editForm.bio} 
+                     onChange={e => setEditForm({...editForm, bio: e.target.value})} 
+                     className="w-full p-6 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-[24px] outline-none focus:border-yellow-400 italic text-sm dark:text-white transition-all"
+                   />
+                 ) : (
+                   <p className="text-xl italic font-light leading-snug dark:text-white">"{myData.bio}"</p>
+                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 <div className="space-y-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30">Identity Resonance</h4>
+              {/* Details Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                 <div className="space-y-5">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30 dark:text-white">Identity Node</h4>
+                    <div className="space-y-4">
+                       {isEditing ? (
+                         <>
+                           <div className="flex items-center gap-3 p-3 bg-white dark:bg-black rounded-xl border dark:border-white/5">
+                             <Briefcase size={14} className="text-yellow-400" />
+                             <input value={editForm.role} onChange={e => setEditForm({...editForm, role: e.target.value})} placeholder="Role" className="bg-transparent outline-none text-xs font-bold dark:text-white w-full" />
+                           </div>
+                           <div className="flex items-center gap-3 p-3 bg-white dark:bg-black rounded-xl border dark:border-white/5">
+                             <MapPin size={14} className="text-yellow-400" />
+                             <input value={editForm.location} onChange={e => setEditForm({...editForm, location: e.target.value})} placeholder="Location" className="bg-transparent outline-none text-xs font-bold dark:text-white w-full" />
+                           </div>
+                           <div className="flex items-center gap-3 p-3 bg-white dark:bg-black rounded-xl border dark:border-white/5">
+                             <GraduationCap size={14} className="text-yellow-400" />
+                             <input value={editForm.education} onChange={e => setEditForm({...editForm, education: e.target.value})} placeholder="Education" className="bg-transparent outline-none text-xs font-bold dark:text-white w-full" />
+                           </div>
+                         </>
+                       ) : (
+                         <>
+                           <div className="flex items-center gap-3 text-sm font-bold opacity-70 dark:text-white"><Briefcase size={16} className="text-yellow-400" /> {myData.role}</div>
+                           <div className="flex items-center gap-3 text-sm font-bold opacity-70 dark:text-white"><MapPin size={16} className="text-yellow-400" /> {myData.location}</div>
+                           <div className="flex items-center gap-3 text-sm font-bold opacity-70 dark:text-white"><GraduationCap size={16} className="text-yellow-400" /> {myData.education}</div>
+                         </>
+                       )}
+                    </div>
+                 </div>
+                 <div className="space-y-5">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30 dark:text-white">Sync Parameters</h4>
                     <div className="space-y-3">
-                       <div className="flex items-center gap-3 text-sm font-bold opacity-70"><Phone size={16} className="text-yellow-400" /> {myData.phone || "N/A"}</div>
-                       <div className="flex items-center gap-3 text-sm font-bold opacity-70"><MapPin size={16} className="text-yellow-400" /> {myData.location || "Global"}</div>
-                       <div className="flex items-center gap-3 text-sm font-bold opacity-70"><Briefcase size={16} className="text-yellow-400" /> {myData.role || "Soul"}</div>
-                       <div className="flex items-center gap-3 text-sm font-bold opacity-70"><GraduationCap size={16} className="text-yellow-400" /> {myData.education || "Life Experience"}</div>
-                    </div>
-                 </div>
-                 <div className="space-y-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30">Intent & Future</h4>
-                    <div className="space-y-3">
-                       <div className="text-sm font-black text-yellow-500 uppercase">💍 {myData.intent}</div>
-                       <div className="text-sm font-bold opacity-70">Commitment: {myData.commitment}</div>
-                       <div className="text-sm font-bold opacity-70">Children: {myData.children}</div>
-                       <div className="text-sm font-bold opacity-70">Relocation: {myData.relocate}</div>
-                    </div>
-                 </div>
-              </div>
-
-              <div className="pt-8 border-t dark:border-white/5 border-black/5 grid grid-cols-1 md:grid-cols-2 gap-8">
-                 <div className="space-y-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30">Vibe & Lifestyle</h4>
-                    <div className="flex flex-wrap gap-2">
-                       {(myData.traits || []).map((t: string) => <span key={t} className="px-3 py-1 bg-yellow-400 text-black rounded-full text-[8px] font-black uppercase tracking-widest">{t}</span>)}
-                    </div>
-                 </div>
-                 <div className="space-y-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30">Values & Culture</h4>
-                    <div className="flex flex-wrap gap-2">
-                       {(myData.values || []).map((v: string) => <span key={v} className="px-3 py-1 border border-current rounded-full text-[8px] font-black uppercase tracking-widest">{v}</span>)}
+                       {isEditing ? (
+                         <select 
+                           value={editForm.intent} 
+                           onChange={e => setEditForm({...editForm, intent: e.target.value})} 
+                           className="w-full p-4 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-xl outline-none font-black text-[10px] uppercase tracking-widest text-yellow-500"
+                         >
+                           {['Serious relationship', 'Marriage-minded', 'Casual discovery', 'Friendship orbit'].map(i => <option key={i} value={i}>{i}</option>)}
+                         </select>
+                       ) : (
+                         <div className="text-sm font-black text-yellow-500 uppercase tracking-widest">💍 {myData.intent}</div>
+                       )}
+                       <div className="text-[10px] font-black uppercase dark:text-white/60 tracking-widest">Preference: {myData.lookingFor}</div>
                     </div>
                  </div>
               </div>
 
-              <div className="p-8 bg-black dark:bg-white text-white dark:text-black rounded-[40px] relative overflow-hidden group">
-                 <Sparkles className="absolute top-4 right-4 text-yellow-400 opacity-20 group-hover:scale-150 transition-transform duration-1000" size={64} />
-                 <h5 className="text-[10px] font-black uppercase tracking-widest opacity-50 mb-3 italic">"The quickest way to my heart is..."</h5>
-                 <p className="text-2xl font-black tracking-tighter leading-none italic">"{myData.prompt}"</p>
+              {/* Vibe Spectrum Tags */}
+              <div className="pt-10 border-t dark:border-white/10 border-black/5">
+                 <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30 mb-5 dark:text-white">Aura Traits</h4>
+                 <div className="flex flex-wrap gap-2">
+                    {isEditing ? (
+                      ['Funny', 'Calm', 'Adventurous', 'Romantic', 'Ambitious', 'Creative', 'Intellectual', 'Spiritual'].map(t => (
+                        <button 
+                          key={t} 
+                          onClick={() => toggleItem('traits', t)} 
+                          className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${editForm.traits.includes(t) ? 'bg-yellow-400 border-yellow-400 text-black shadow-md' : 'border-black/10 dark:border-white/10 dark:text-white/40 opacity-50'}`}
+                        >
+                          {t}
+                        </button>
+                      ))
+                    ) : (
+                      (myData.traits || []).map((t: string) => (
+                        <span key={t} className="px-4 py-2 bg-yellow-400 text-black rounded-full text-[9px] font-black uppercase tracking-widest">{t}</span>
+                      ))
+                    )}
+                 </div>
               </div>
 
-              <div className="space-y-4">
-                 <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30">Essential Frequency</h4>
-                 <div className="grid grid-cols-3 gap-2">
-                    {(myData.essentials || ["Authenticity", "Adventure", "Respect"]).map((e: string) => (
-                       <div key={e} className="p-4 bg-white dark:bg-white/5 rounded-2xl border border-black/5 dark:border-white/10 text-center text-[10px] font-black uppercase tracking-widest">{e}</div>
-                    ))}
+              {/* Core Values */}
+              <div className="pt-6">
+                 <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30 mb-5 dark:text-white">Core Values</h4>
+                 <div className="flex flex-wrap gap-2">
+                    {isEditing ? (
+                      ['Honesty', 'Growth', 'Independence', 'Loyalty', 'Kindness', 'Ambition', 'Compassion'].map(v => (
+                        <button 
+                          key={v} 
+                          onClick={() => toggleItem('values', v)} 
+                          className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${editForm.values.includes(v) ? 'bg-black dark:bg-white dark:text-black text-white' : 'border-black/10 dark:border-white/10 dark:text-white/40 opacity-50'}`}
+                        >
+                          {v}
+                        </button>
+                      ))
+                    ) : (
+                      (myData.values || []).map((v: string) => (
+                        <span key={v} className="px-4 py-2 border dark:border-white/20 border-black/10 dark:text-white rounded-full text-[9px] font-black uppercase tracking-widest">{v}</span>
+                      ))
+                    )}
                  </div>
+              </div>
+
+              {/* Prompt Section */}
+              <div className="p-8 bg-black dark:bg-zinc-800 text-white rounded-[40px] relative overflow-hidden group border dark:border-white/5">
+                 <MessageSquare className="absolute top-4 right-4 text-yellow-400 opacity-20 group-hover:rotate-12 transition-all duration-1000" size={64} />
+                 <h5 className="text-[8px] font-black uppercase tracking-[0.4em] opacity-50 mb-4 italic">Signal Pulse Prompt</h5>
+                 {isEditing ? (
+                   <input 
+                    value={editForm.prompt} 
+                    onChange={e => setEditForm({...editForm, prompt: e.target.value})} 
+                    placeholder="Enter your resonance trigger..."
+                    className="w-full bg-transparent border-b border-yellow-400/30 py-2 outline-none text-2xl font-black tracking-tighter italic text-yellow-400 placeholder:opacity-20"
+                   />
+                 ) : (
+                   <p className="text-2xl font-black tracking-tighter leading-tight italic">"{myData.prompt}"</p>
+                 )}
               </div>
            </div>
         </div>

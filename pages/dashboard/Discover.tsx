@@ -1,186 +1,199 @@
 
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import gsap from 'gsap';
-import { Heart, X, Star, MapPin, ShieldCheck, Briefcase, GraduationCap, ChevronDown, Info, Send, MessageSquare, Quote, Sparkles, Crown, Lock } from 'lucide-react';
+import { 
+  Heart, X, Star, MapPin, ShieldCheck, Briefcase, Info, Send, 
+  MessageSquare, Sparkles, Lock, Filter, ChevronLeft, ChevronRight, 
+  User, GraduationCap, Compass, Zap, Wine, Moon, Baby, Globe, Shield
+} from 'lucide-react';
 import { PremiumContext } from './DashboardLayout';
 
 export const mockProfiles = [
-  {
-    id: 1,
-    name: "Ademilade",
-    age: 35,
-    role: "Business Owner",
-    education: "Oou 2017",
-    location: "Lagos, Nigeria",
-    phone: "+234 800...",
-    intent: "Serious relationship",
-    commitment: "Very important",
-    traits: ["Ambitious", "Calm", "Funny"],
-    weekend: "Exploring new places",
-    drinks: "Sometimes",
-    smokes: "No",
-    values: ["Growth", "Honesty", "Family"],
-    languages: ["English", "Yoruba"],
-    belief: "Christian",
-    children: "Want someday",
-    relocate: "Yes",
-    essentials: ["Music", "Travel", "Faith"],
-    bio: "I love deep conversations, spontaneous trips, and people who can make me laugh. Building empires and looking for a partner in crime.",
-    prompt: "Consistency and kindness.",
-    verified: true,
+  { 
+    id: 1, name: "Ademilade", age: 35, role: "Owner", location: "Lagos, NG", intent: "Relationship", commitment: "High", 
+    traits: ["Ambitious", "Calm", "Visionary"], bio: "Building empires and seeking deep connections. I value truth above all else.", 
+    prompt: "Consistency is my love language.", verified: true, education: "Business Administration",
+    gender: 'Man', lookingFor: 'Women', weekend: 'Networking', drinks: 'Socially', smokes: 'No',
+    belief: 'Goal-oriented', children: 'Want someday', relocate: 'Always open',
+    values: ["Growth", "Honesty", "Ambition"],
     img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800",
-    compliments: ["Always brings the best energy to meetings!", "Truly a visionary."]
+    photos: ["https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"],
+    compliments: ["Visionary!"] 
   },
-  {
-    id: 2,
-    name: "Sarah",
-    age: 26,
-    role: "UI Designer",
-    education: "Unilag 2019",
-    location: "Abuja, Nigeria",
-    phone: "+234 901...",
-    intent: "Serious relationship",
-    commitment: "Very important",
-    traits: ["Creative", "Introverted", "Romantic"],
-    weekend: "Staying in & relaxing",
-    drinks: "No",
-    smokes: "No",
-    values: ["Kindness", "Honesty", "Loyalty"],
-    languages: ["English", "French"],
-    belief: "Spiritual",
-    children: "Not sure",
-    relocate: "Maybe",
-    essentials: ["Art", "Books", "Family"],
-    bio: "Looking for a soul that resonates. I enjoy quiet coffee shops, sketching, and talking about the universe.",
-    prompt: "Authenticity and patience.",
-    verified: true,
+  { 
+    id: 2, name: "Sarah", age: 26, role: "UI Designer", location: "Abuja, NG", intent: "Serious", commitment: "High", 
+    traits: ["Creative", "Romantic", "Thoughtful"], bio: "Quiet coffee and sketches. I'm looking for someone to share sunsets and Figma files with.", 
+    prompt: "Authenticity wins every time.", verified: true, education: "Visual Arts",
+    gender: 'Woman', lookingFor: 'Men', weekend: 'Exploring Art', drinks: 'Rarely', smokes: 'No',
+    belief: 'Spiritual', children: 'Want someday', relocate: 'Maybe',
+    values: ["Kindness", "Creativity", "Loyalty"],
     img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=800",
-    compliments: ["Her eye for detail is unmatched.", "A very calming presence."]
+    photos: ["https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=800"],
+    compliments: ["Calming."] 
   },
-  { id: 3, name: "Chinedu", age: 29, role: "Tech Lead", location: "Lagos", intent: "Marriage-minded", traits: ["Funny", "Smart"], img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800", compliments: [], values: ["Growth"], languages: ["English"], essentials: ["Tech"], bio: "Coding the future.", prompt: "Clean code." },
-  { id: 4, name: "Amara", age: 24, role: "Artist", location: "Enugu", intent: "Something casual", traits: ["Creative", "Wild"], img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800", compliments: ["Best colors ever!"], values: ["Freedom"], languages: ["English"], essentials: ["Paint"], bio: "Life is a canvas.", prompt: "Spontaneity." },
-  { id: 5, name: "Tunde", age: 32, role: "Architect", location: "Lagos", intent: "Serious relationship", traits: ["Calm", "Focused"], img: "https://images.unsplash.com/photo-1492562080023-ab3dbdf9bbbd?auto=format&fit=crop&q=80&w=800", compliments: [], values: ["Loyalty"], languages: ["English"], essentials: ["Design"], bio: "Building foundations.", prompt: "Stability." },
-  { id: 6, name: "Kemi", age: 27, role: "Chef", location: "Ibadan", intent: "Serious relationship", traits: ["Warm", "Funny"], img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=800", compliments: ["Her Jollof is 10/10"], values: ["Family"], languages: ["English"], essentials: ["Spices"], bio: "Cooking with love.", prompt: "Good food." },
-  { id: 7, name: "David", age: 30, role: "Musician", location: "Jos", intent: "Something casual", traits: ["Creative", "Romantic"], img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=800", compliments: ["Soulful voice."], values: ["Harmony"], languages: ["English"], essentials: ["Guitar"], bio: "Vibrating on high frequencies.", prompt: "Rhythm." },
-  { id: 8, name: "Zainab", age: 25, role: "Lawyer", location: "Kano", intent: "Marriage-minded", traits: ["Smart", "Ambitious"], img: "https://images.unsplash.com/photo-1567532939604-b6b5b0ad2f01?auto=format&fit=crop&q=80&w=800", compliments: [], values: ["Justice"], languages: ["English", "Hausa"], essentials: ["Books"], bio: "Seeking balance.", prompt: "Truth." },
-  { id: 9, name: "Ife", age: 28, role: "Photographer", location: "Lagos", intent: "Serious relationship", traits: ["Creative", "Outgoing"], img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=800", compliments: ["Captured my best side."], values: ["Kindness"], languages: ["English"], essentials: ["Lens"], bio: "Every moment matters.", prompt: "A smile." },
-  { id: 10, name: "Blessing", age: 23, role: "Student", location: "Benin City", intent: "Friendship", traits: ["Funny", "Calm"], img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&q=80&w=800", compliments: [], values: ["Education"], languages: ["English"], essentials: ["Music"], bio: "Learning and growing.", prompt: "Humility." },
-  { id: 11, name: "Emeka", age: 31, role: "Farmer", location: "Owerri", intent: "Serious relationship", traits: ["Hardworking", "Quiet"], img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800", compliments: ["Most reliable guy."], values: ["Land"], languages: ["English", "Igbo"], essentials: ["Nature"], bio: "Back to roots.", prompt: "Harvest." },
-  { id: 12, name: "Yinka", age: 34, role: "Banker", location: "Lagos", intent: "Marriage-minded", traits: ["Focused", "Ambitious"], img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800", compliments: [], values: ["Trust"], languages: ["English"], essentials: ["Numbers"], bio: "Investing in us.", prompt: "Security." },
-  { id: 13, name: "Funmi", age: 26, role: "Model", location: "Lagos", intent: "Something casual", traits: ["Outgoing", "Bold"], img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400", compliments: ["Absolute stunner."], values: ["Beauty"], languages: ["English"], essentials: ["Style"], bio: "Living out loud.", prompt: "Confidence." },
-  { id: 14, name: "Segun", age: 33, role: "Doctor", location: "Abuja", intent: "Serious relationship", traits: ["Calm", "Smart"], img: "https://images.unsplash.com/photo-1618077360395-f3068be8e001?auto=format&fit=crop&w=800", compliments: ["Best listener."], values: ["Health"], languages: ["English"], essentials: ["Care"], bio: "Healing hearts.", prompt: "Kindness." },
-  { id: 15, name: "Titi", age: 24, role: "Dancer", location: "Lagos", intent: "Friendship", traits: ["Funny", "Energetic"], img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800", compliments: ["Energy for days!"], values: ["Expression"], languages: ["English"], essentials: ["Beat"], bio: "Dancing through life.", prompt: "A good beat." },
-  { id: 16, name: "Olamide", age: 29, role: "Writer", location: "Abeokuta", intent: "Serious relationship", traits: ["Introverted", "Smart"], img: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=800", compliments: [], values: ["Words"], languages: ["English", "Yoruba"], essentials: ["Pen"], bio: "Writing our story.", prompt: "A deep talk." },
-  { id: 17, name: "Joshua", age: 27, role: "Athlete", location: "Lagos", intent: "Something casual", traits: ["Focused", "Funny"], img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800", compliments: ["Runs faster than time."], values: ["Speed"], languages: ["English"], essentials: ["Sneakers"], bio: "Never stop moving.", prompt: "The gym." },
-  { id: 18, name: "Chioma", age: 28, role: "Fashionista", location: "Lagos", intent: "Serious relationship", traits: ["Bold", "Smart"], img: "https://images.unsplash.com/photo-1567532939604-b6b5b0ad2f01?auto=format&fit=crop&w=800", compliments: ["Trendsetter."], values: ["Style"], languages: ["English"], essentials: ["Design"], bio: "Style is substance.", prompt: "Elegance." },
-  { id: 19, name: "Damilola", age: 30, role: "Pilot", location: "Lagos", intent: "Marriage-minded", traits: ["Focused", "Adventurous"], img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800", compliments: [], values: ["Height"], languages: ["English"], essentials: ["Clouds"], bio: "Sky is the starting point.", prompt: "Freedom." },
-  { id: 20, name: "Tobi", age: 25, role: "Gamer", location: "Abuja", intent: "Friendship", traits: ["Funny", "Smart"], img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800", compliments: ["Pro player!"], values: ["Strategy"], languages: ["English"], essentials: ["PC"], bio: "Leveling up.", prompt: "A win." }
+  { 
+    id: 3, name: "Elena", age: 28, role: "Artist", location: "Lisbon", intent: "Relationship", traits: ["Romantic", "Free-spirited"], verified: true, 
+    gender: 'Woman', lookingFor: 'Men', education: "Fine Arts", weekend: 'Painting', drinks: 'Wine lover', smokes: 'Socially',
+    belief: 'Agnostic', children: 'Not sure', relocate: 'Yes', bio: "Painting the town red and seeking a muse who can keep up.", 
+    prompt: "Art is long, life is short.",
+    values: ["Independence", "Growth", "Passion"],
+    img: "https://images.unsplash.com/photo-1516589174184-c685266e430c?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1516589174184-c685266e430c?auto=format&fit=crop&q=80&w=800"]
+  }
 ];
 
 export const ProfileDetailView = ({ profile }: { profile: any }) => {
   const [compliment, setCompliment] = useState('');
-  const [localCompliments, setLocalCompliments] = useState<string[]>(profile.compliments || []);
+  const [activePhotoIdx, setActivePhotoIdx] = useState(0);
 
-  const handleSendCompliment = () => {
-    if (!compliment.trim()) return;
-    setLocalCompliments([compliment, ...localCompliments]);
-    setCompliment('');
-  };
+  const photos = profile.photos && profile.photos.length > 0 ? profile.photos : [profile.img];
+
+  // FIX: Using React.FC to properly handle children and key props in JSX
+  const Tag: React.FC<{ children: React.ReactNode, icon?: any }> = ({ children, icon: Icon }) => (
+    <div className="px-3 py-1.5 bg-slate-100 dark:bg-white/5 rounded-full flex items-center gap-1.5 border dark:border-white/10 border-black/5 shrink-0">
+      {Icon && <Icon size={10} className="text-yellow-500" />}
+      <span className="text-[9px] font-black uppercase tracking-widest dark:text-white/80">{children}</span>
+    </div>
+  );
+
+  // FIX: Using React.FC to properly handle children in JSX
+  const SectionTitle: React.FC<{ children: React.ReactNode, icon: any }> = ({ children, icon: Icon }) => (
+    <div className="flex items-center gap-2 opacity-30 mb-3">
+      <Icon size={12} />
+      <span className="text-[8px] font-black uppercase tracking-widest dark:text-white">{children}</span>
+    </div>
+  );
 
   return (
-    <div className="space-y-12 pb-20">
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 opacity-30">
-          <Info size={14} />
-          <span className="text-[10px] font-black uppercase tracking-widest">Soul Biography</span>
-        </div>
-        <p className="text-2xl md:text-3xl italic font-light dark:text-white text-black leading-snug">
-          "{profile.bio || "Searching for a global resonance and meaningful connection..."}"
-        </p>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="p-6 bg-white dark:bg-white/5 rounded-[30px] border border-black/5 dark:border-white/10">
-          <span className="text-[8px] font-black uppercase tracking-widest opacity-40 block mb-2">Intent</span>
-          <p className="text-sm font-black text-yellow-500 uppercase">💍 {profile.intent || "Not specified"}</p>
-        </div>
-        <div className="p-6 bg-white dark:bg-white/5 rounded-[30px] border border-black/5 dark:border-white/10">
-          <span className="text-[8px] font-black uppercase tracking-widest opacity-40 block mb-2">Commitment</span>
-          <p className="text-sm font-black">{profile.commitment || "Very Important"}</p>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Personality Aura</span>
-        <div className="flex flex-wrap gap-2">
-           {(profile.traits || []).map((t: string) => (
-             <span key={t} className="px-5 py-2.5 bg-yellow-400 text-black rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-yellow-400/10">
-               {t}
-             </span>
-           ))}
-        </div>
-      </div>
-
-      <div className="p-8 bg-yellow-400/5 border border-yellow-400/20 rounded-[40px] space-y-6">
-          <div className="flex items-center gap-3 text-yellow-400">
-             <MessageSquare size={20} />
-             <span className="text-xs font-black uppercase tracking-widest">Recommend this Soul</span>
-          </div>
-          <div className="relative group">
-             <input 
-                value={compliment}
-                onChange={(e) => setCompliment(e.target.value)}
-                placeholder="Write a public compliment..." 
-                className="w-full bg-white dark:bg-black/50 border-2 dark:border-white/10 border-black/5 rounded-[24px] py-5 px-8 focus:border-yellow-400 outline-none text-base font-bold pr-20 transition-all" 
-             />
-             <button onClick={handleSendCompliment} className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 bg-yellow-400 text-black rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg">
-                <Send size={20} />
-             </button>
-          </div>
-          
-          {localCompliments.length > 0 && (
-            <div className="pt-4 space-y-4">
-               <h5 className="text-[10px] font-black uppercase tracking-widest opacity-30">Community Echoes</h5>
-               <div className="space-y-3">
-                  {localCompliments.map((c, idx) => (
-                    <div key={idx} className="p-5 bg-white dark:bg-white/5 rounded-[24px] flex gap-4 border border-black/5 dark:border-white/5 italic">
-                       <Quote size={16} className="text-yellow-400 shrink-0" />
-                       <p className="text-sm font-medium opacity-80">{c}</p>
-                    </div>
-                  ))}
-               </div>
+    <div className="space-y-8 pb-32">
+      {/* Photo Carousel */}
+      <div className="relative aspect-[4/5] w-full rounded-[40px] overflow-hidden group shadow-2xl">
+         <img src={photos[activePhotoIdx]} alt={profile.name} className="absolute inset-0 w-full h-full object-cover transition-all duration-700" />
+         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+         
+         <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
+            <div className="flex gap-2">
+               {photos.map((_, i) => (
+                 <div key={i} className={`h-1 rounded-full transition-all ${i === activePhotoIdx ? 'w-8 bg-yellow-400' : 'w-2 bg-white/30'}`} />
+               ))}
             </div>
-          )}
-      </div>
-
-      <div className="p-10 bg-black dark:bg-white text-white dark:text-black rounded-[50px] relative overflow-hidden group">
-         <Sparkles className="absolute -top-6 -right-6 text-yellow-400 opacity-10 group-hover:scale-125 transition-transform duration-1000" size={120} />
-         <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 block mb-4 italic">Inner Resonance</span>
-         <p className="text-3xl font-black tracking-tighter leading-tight italic">
-           "The quickest way to my heart is... {profile.prompt || "authenticity and shared dreams."}"
-         </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 pt-4 border-t dark:border-white/10 border-black/10">
-          {[
-            { label: 'Role', val: profile.role },
-            { label: 'Education', val: profile.education },
-            { label: 'Beliefs', val: profile.belief },
-            { label: 'Location', val: profile.location },
-            { label: 'Weekend Style', val: profile.weekend || "Exploring Cities" },
-            { label: 'Languages', val: (profile.languages || ["English"]).join(', ') },
-            { label: 'Children', val: profile.children || "Not Specified" },
-            { label: 'Relocate', val: profile.relocate || "Open to it" },
-            { label: 'Drinking', val: profile.drinks || "Sometimes" },
-            { label: 'Smoking', val: profile.smokes || "No" },
-            { label: 'Essentials', val: (profile.essentials || ["Music", "Travel"]).join(', ') },
-            { label: 'Commitment', val: profile.commitment || "High" },
-          ].map((item, idx) => (
-            <div key={idx} className="group">
-               <span className="text-[9px] font-black uppercase tracking-widest opacity-30 block mb-1 group-hover:text-yellow-400 transition-colors">{item.label}</span>
-               <p className="text-base font-bold">{item.val || "..."}</p>
+            <div className="flex gap-2">
+               <button onClick={() => setActivePhotoIdx(p => Math.max(0, p-1))} className="p-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-yellow-400 hover:text-black transition-all"><ChevronLeft size={16} /></button>
+               <button onClick={() => setActivePhotoIdx(p => Math.min(photos.length-1, p+1))} className="p-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-yellow-400 hover:text-black transition-all"><ChevronRight size={16} /></button>
             </div>
-          ))}
+         </div>
+      </div>
+
+      {/* Narrative Section */}
+      <div className="space-y-4">
+        <SectionTitle icon={Info}>The Narrative</SectionTitle>
+        <p className="text-xl md:text-2xl italic font-light dark:text-white text-black leading-snug">"{profile.bio || "Searching resonance..."}"</p>
+        <div className="p-6 bg-black dark:bg-white text-white dark:text-black rounded-[28px] relative overflow-hidden group">
+           <Sparkles className="absolute -top-3 -right-3 text-yellow-400 opacity-10 group-hover:scale-125 transition-transform" size={60} />
+           <p className="text-lg font-black tracking-tighter leading-tight italic">"{profile.prompt || "Authenticity wins."}"</p>
+        </div>
+      </div>
+
+      {/* Core Identity */}
+      <div className="space-y-4">
+        <SectionTitle icon={User}>Core Identity</SectionTitle>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+            <span className="text-[7px] font-black uppercase tracking-widest opacity-40 block mb-1 dark:text-white">Professional Role</span>
+            <div className="flex items-center gap-2 font-black text-xs dark:text-white">
+              <Briefcase size={12} className="text-yellow-500" />
+              {profile.role || "Soul"}
+            </div>
+          </div>
+          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+            <span className="text-[7px] font-black uppercase tracking-widest opacity-40 block mb-1 dark:text-white">Education</span>
+            <div className="flex items-center gap-2 font-black text-xs dark:text-white">
+              <GraduationCap size={12} className="text-yellow-500" />
+              {profile.education || "Global Origin"}
+            </div>
+          </div>
+          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+            <span className="text-[7px] font-black uppercase tracking-widest opacity-40 block mb-1 dark:text-white">Intent Resonance</span>
+            <p className="text-xs font-black text-yellow-500 uppercase">💍 {profile.intent}</p>
+          </div>
+          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+            <span className="text-[7px] font-black uppercase tracking-widest opacity-40 block mb-1 dark:text-white">Looking For</span>
+            <p className="text-xs font-black uppercase dark:text-white">{profile.lookingFor || "Everyone"}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Aura Spectrum (Tags) */}
+      <div className="space-y-6">
+        <div>
+          <SectionTitle icon={Zap}>Aura Spectrum</SectionTitle>
+          <div className="flex flex-wrap gap-2">
+            {(profile.traits || []).map((t: string) => <Tag key={t} icon={Sparkles}>{t}</Tag>)}
+          </div>
+        </div>
+        <div>
+          <SectionTitle icon={Shield}>Core Values</SectionTitle>
+          <div className="flex flex-wrap gap-2">
+            {(profile.values || []).map((v: string) => <Tag key={v} icon={Heart}>{v}</Tag>)}
+          </div>
+        </div>
+      </div>
+
+      {/* Lifestyle Sync */}
+      <div className="space-y-4">
+        <SectionTitle icon={Compass}>Lifestyle Sync</SectionTitle>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+            <div className="flex items-center gap-2 mb-1 opacity-40">
+              <Star size={10} />
+              <span className="text-[7px] font-black uppercase tracking-widest dark:text-white">Weekend Style</span>
+            </div>
+            <p className="text-xs font-black dark:text-white">{profile.weekend || "Exploring"}</p>
+          </div>
+          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+            <div className="flex items-center gap-2 mb-1 opacity-40">
+              <Wine size={10} />
+              <span className="text-[7px] font-black uppercase tracking-widest dark:text-white">Social Vibe</span>
+            </div>
+            <p className="text-xs font-black dark:text-white">Drinks: {profile.drinks || "Sometimes"}</p>
+          </div>
+          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+            <div className="flex items-center gap-2 mb-1 opacity-40">
+              <Moon size={10} />
+              <span className="text-[7px] font-black uppercase tracking-widest dark:text-white">Beliefs</span>
+            </div>
+            <p className="text-xs font-black dark:text-white">{profile.belief || "Spiritual"}</p>
+          </div>
+          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+            <div className="flex items-center gap-2 mb-1 opacity-40">
+              <Baby size={10} />
+              <span className="text-[7px] font-black uppercase tracking-widest dark:text-white">Children</span>
+            </div>
+            <p className="text-xs font-black dark:text-white">{profile.children || "Not specified"}</p>
+          </div>
+          <div className="col-span-2 p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5 flex items-center justify-between">
+            <div className="flex items-center gap-2 opacity-40">
+              <Globe size={10} />
+              <span className="text-[7px] font-black uppercase tracking-widest dark:text-white">Willingness to Relocate</span>
+            </div>
+            <p className="text-xs font-black dark:text-white">{profile.relocate || "Open to travel"}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Interaction */}
+      <div className="p-6 bg-yellow-400/5 border border-yellow-400/10 rounded-[32px] space-y-4">
+          <div className="flex items-center gap-2 text-yellow-400">
+            <MessageSquare size={16} />
+            <span className="text-[10px] font-black uppercase tracking-widest">Resonance Pulse</span>
+          </div>
+          <p className="text-[9px] font-bold opacity-60 dark:text-white leading-relaxed">
+            Sending a compliment signal increases matching resonance by 40%.
+          </p>
+          <div className="relative">
+             <input value={compliment} onChange={(e) => setCompliment(e.target.value)} placeholder="Sync a compliment..." className="w-full bg-white dark:bg-zinc-800 border dark:border-white/10 rounded-xl py-4 px-5 focus:border-yellow-400 outline-none text-xs font-bold pr-14 transition-all dark:text-white" />
+             <button className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-yellow-400 text-black rounded-lg flex items-center justify-center shadow-lg active:scale-95 transition-all"><Send size={16} /></button>
+          </div>
       </div>
     </div>
   );
@@ -189,147 +202,139 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
 const Discover: React.FC = () => {
   const { isPremium, openUpgrade } = useContext(PremiumContext);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [swipeCount, setSwipeCount] = useState(0);
-  const [isGated, setIsGated] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    ageRange: [18, 50],
+    genderPref: 'Everyone'
+  });
+
   const cardRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleSwipe = (direction: 'left' | 'right') => {
-    if (currentIndex >= mockProfiles.length) return;
-
-    // Check limit for non-premium
-    if (!isPremium && swipeCount >= 5) {
-      setIsGated(true);
-      return;
+  useEffect(() => {
+    const saved = localStorage.getItem('aura_user_profile');
+    if (saved) {
+      const data = JSON.parse(saved);
+      setFilters(prev => ({
+        ...prev,
+        genderPref: data.lookingFor || 'Everyone',
+        ageRange: data.ageRange || [18, 50]
+      }));
     }
+  }, []);
 
-    // Reset scroll before swipe
+  const filteredProfiles = useMemo(() => {
+    return mockProfiles.filter(p => {
+      const matchesGender = filters.genderPref === 'Everyone' || 
+                           (filters.genderPref === 'Men' && p.gender === 'Man') ||
+                           (filters.genderPref === 'Women' && p.gender === 'Woman');
+      const matchesAge = p.age >= filters.ageRange[0] && p.age <= filters.ageRange[1];
+      return matchesGender && matchesAge;
+    });
+  }, [filters]);
+
+  const handleSwipe = (direction: 'left' | 'right') => {
+    if (currentIndex >= filteredProfiles.length) return;
     if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0;
-
     gsap.to(cardRef.current, {
       x: direction === 'left' ? -1000 : 1000,
       opacity: 0,
-      rotate: direction === 'left' ? -40 : 40,
-      duration: 0.8,
-      ease: 'power3.in',
+      rotate: direction === 'left' ? -15 : 15,
+      duration: 0.5,
       onComplete: () => {
         setCurrentIndex(prev => prev + 1);
-        setSwipeCount(prev => prev + 1);
-        gsap.fromTo(cardRef.current, { x: 0, opacity: 0, rotate: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.5 });
+        gsap.fromTo(cardRef.current, { x: 0, opacity: 0, rotate: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.4 });
       }
     });
   };
 
-  if (isGated) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center p-12 text-center space-y-10 animate-in zoom-in-95 duration-500">
-        <div className="w-40 h-40 bg-yellow-400 text-black rounded-[60px] flex items-center justify-center shadow-2xl shadow-yellow-400/30">
-            <Crown size={80} />
-        </div>
-        <div className="space-y-4">
-          <h2 className="text-6xl font-black tracking-tighter leading-none uppercase">SIGNAL REACHED.</h2>
-          <p className="opacity-40 text-xl max-w-sm mx-auto">Free orbit limit reached. Upgrade to Premium for infinite global resonance and soul connections.</p>
-        </div>
-        <button 
-          onClick={openUpgrade}
-          className="bg-yellow-400 text-black px-12 py-6 rounded-[30px] font-black uppercase tracking-[0.2em] text-sm shadow-2xl shadow-yellow-400/30 hover:scale-105 active:scale-95 transition-all"
-        >
-          Unlock Infinite Soul
-        </button>
-        <button onClick={() => setIsGated(false)} className="text-[10px] font-black uppercase tracking-widest opacity-30">Maybe Later</button>
-      </div>
-    );
-  }
+  const profile = filteredProfiles[currentIndex];
 
-  const profile = mockProfiles[currentIndex];
-
-  if (currentIndex >= mockProfiles.length) {
-    return (
-      <div className="h-full flex flex-col items-center justify-center p-12 text-center space-y-10">
-        <div className="w-40 h-40 bg-yellow-400 rounded-[60px] flex items-center justify-center animate-bounce shadow-2xl shadow-yellow-400/20">
-            <Heart size={80} className="text-black fill-black" />
-        </div>
-        <div className="space-y-4">
-          <h2 className="text-6xl font-black tracking-tighter leading-none">GLOBAL REACH.</h2>
-          <p className="opacity-40 text-xl max-w-sm mx-auto">You've reached the end of your current orbit. New souls join every minute.</p>
-        </div>
-        <button onClick={() => setCurrentIndex(0)} className="interactive bg-black dark:bg-white text-white dark:text-black px-12 py-6 rounded-[30px] font-black uppercase tracking-[0.2em] text-sm shadow-2xl">Reset Resonance</button>
+  if (!profile) return (
+    <div className="h-full flex flex-col items-center justify-center p-6 text-center space-y-6">
+      <div className="w-24 h-24 bg-yellow-400 rounded-[32px] flex items-center justify-center animate-bounce shadow-2xl shadow-yellow-400/20"><Heart size={48} className="text-black" /></div>
+      <div className="space-y-2">
+        <h2 className="text-3xl font-black tracking-tighter uppercase dark:text-white">OUT OF ORBIT.</h2>
+        <p className="text-xs font-bold opacity-40 uppercase tracking-widest dark:text-white/40">Broaden your filters to find more souls.</p>
       </div>
-    );
-  }
+      <button onClick={() => { setCurrentIndex(0); setShowFilters(true); }} className="bg-black dark:bg-white text-white dark:text-black px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl active:scale-95 transition-all">Adjust Filters</button>
+    </div>
+  );
 
   return (
-    <div ref={containerRef} className="h-full flex flex-col relative bg-white dark:bg-black overflow-hidden">
-      
-      {/* SCROLLABLE PROFILE VIEW */}
-      <div 
-        ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto no-scrollbar scroll-smooth"
-      >
-        <div ref={cardRef} className="max-w-3xl mx-auto px-4 md:px-8 py-4 lg:py-12 space-y-8">
-            
-            {/* HERO IMAGE CARD */}
-            <div className="relative aspect-[3/4] md:aspect-[4/5] w-full rounded-[60px] overflow-hidden shadow-2xl group border-4 border-yellow-400/20">
+    <div className="h-full flex flex-col relative bg-white dark:bg-black overflow-hidden">
+      {showFilters && (
+        <div className="absolute inset-0 z-[100] bg-black/90 backdrop-blur-2xl p-8 flex flex-col items-center justify-center animate-in fade-in duration-300">
+           <div className="w-full max-w-sm space-y-10">
+              <div className="flex items-center justify-between">
+                <h3 className="text-3xl font-black text-white tracking-tighter uppercase">FILTERS<span className="text-yellow-400">.</span></h3>
+                <button onClick={() => setShowFilters(false)} className="p-2 bg-white/10 rounded-full text-white"><X size={20} /></button>
+              </div>
+              <div className="space-y-6">
+                 <label className="text-[10px] font-black uppercase tracking-widest text-white/40 block">Seeking Resonance From</label>
+                 <div className="grid grid-cols-3 gap-2">
+                    {['Men', 'Women', 'Everyone'].map(g => (
+                      <button 
+                        key={g} 
+                        onClick={() => setFilters({...filters, genderPref: g})} 
+                        className={`py-3 rounded-xl font-black text-[9px] uppercase tracking-widest border transition-all ${filters.genderPref === g ? 'bg-yellow-400 text-black border-yellow-400' : 'text-white border-white/10'}`}
+                      >
+                        {g}
+                      </button>
+                    ))}
+                 </div>
+              </div>
+              <div className="space-y-6">
+                 <div className="flex justify-between items-center">
+                   <label className="text-[10px] font-black uppercase tracking-widest text-white/40 block">Frequency Range (Age)</label>
+                   <span className="text-yellow-400 font-black text-xs">{filters.ageRange[1]}</span>
+                 </div>
+                 <input 
+                   type="range" min="18" max="80" 
+                   value={filters.ageRange[1]} 
+                   onChange={e => setFilters({...filters, ageRange: [18, parseInt(e.target.value)]})}
+                   className="w-full h-1.5 bg-white/10 accent-yellow-400 rounded-full" 
+                 />
+              </div>
+              <button onClick={() => { setShowFilters(false); setCurrentIndex(0); }} className="w-full bg-yellow-400 text-black py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">Apply Resonance</button>
+           </div>
+        </div>
+      )}
+
+      <header className="px-5 py-3 flex items-center justify-between shrink-0 z-10 border-b dark:border-white/5 bg-white/50 dark:bg-black/50 backdrop-blur-xl">
+         <span className="text-[8px] font-black uppercase tracking-widest opacity-40 dark:text-white">Active Discovery</span>
+         <button onClick={() => setShowFilters(true)} className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all dark:text-white"><Filter size={18} /></button>
+      </header>
+
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto no-scrollbar scroll-smooth">
+        <div ref={cardRef} className="max-w-xl mx-auto px-4 py-4 lg:py-6 space-y-6">
+            <div className="relative aspect-[4/5] w-full rounded-[40px] overflow-hidden shadow-2xl border-2 dark:border-white/5">
               <img src={profile.img} alt={profile.name} className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-              
-              <div className="absolute top-8 right-8">
-                 <div className="p-4 bg-black/40 backdrop-blur-md rounded-3xl border border-white/10 text-yellow-400">
-                   <ShieldCheck size={24} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+              <div className="absolute bottom-0 left-0 w-full p-8 space-y-3">
+                 <div className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-400 rounded-lg w-fit">
+                     <ShieldCheck size={14} className="text-black" />
+                     <span className="text-[8px] font-black text-black uppercase tracking-widest">Verified Identity</span>
                  </div>
-              </div>
-
-              <div className="absolute bottom-0 left-0 w-full p-10 space-y-4">
-                 <div className="flex items-center gap-3 px-4 py-2 bg-yellow-400 rounded-2xl w-fit shadow-xl">
-                     <ShieldCheck size={18} className="text-black" />
-                     <span className="text-xs font-black text-black uppercase tracking-widest">Resonance Verified</span>
-                 </div>
-                 <h2 className="text-6xl md:text-8xl font-black text-white tracking-tighter leading-none">{profile.name}, {profile.age}</h2>
-                 <div className="flex flex-wrap gap-6 text-white/80 font-bold text-lg">
-                   <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-md border border-white/10"><MapPin size={20} className="text-yellow-400" /> {profile.location}</div>
-                   <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-md border border-white/10"><Briefcase size={20} className="text-yellow-400" /> {profile.role || "Soul"}</div>
+                 <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-none uppercase">{profile.name}, {profile.age}</h2>
+                 <div className="flex flex-wrap gap-4 text-white/80 font-bold text-xs">
+                   <div className="flex items-center gap-1.5"><MapPin size={14} className="text-yellow-400" /> {profile.location}</div>
+                   <div className="flex items-center gap-1.5"><Briefcase size={14} className="text-yellow-400" /> {profile.role}</div>
                  </div>
               </div>
             </div>
-
-            {/* SCROLL INDICATOR */}
-            <div className="flex flex-col items-center gap-2 opacity-30 animate-pulse py-4">
-               <span className="text-[10px] font-black uppercase tracking-[0.4em]">Scroll for resonance details</span>
-               <ChevronDown size={20} />
-            </div>
-
-            {/* DETAILED INFO SECTION */}
             <ProfileDetailView profile={profile} />
         </div>
       </div>
 
-      {/* FLOATING ACTION BAR - STAYS FIXED AT BOTTOM */}
-      <div className="absolute bottom-8 left-0 w-full px-8 pointer-events-none z-50">
-          <div className="max-w-sm mx-auto flex items-center justify-center gap-8 pointer-events-auto">
-              <button 
-                onClick={() => handleSwipe('left')} 
-                className="interactive w-20 h-20 bg-white dark:bg-white/10 border-4 border-black/5 dark:border-white/10 rounded-full flex items-center justify-center dark:text-white text-black hover:bg-black hover:text-white transition-all shadow-[0_20px_50px_rgba(0,0,0,0.2)]"
-              >
-                <X size={36} />
-              </button>
-              
-              <button onClick={() => !isPremium ? openUpgrade() : null} className="interactive w-24 h-24 bg-yellow-400 rounded-full flex items-center justify-center text-black hover:scale-110 shadow-[0_25px_60px_rgba(250,204,21,0.4)] transition-all relative">
-                <Star size={40} fill="currentColor" />
-                {!isPremium && <Lock size={12} className="absolute top-4 right-4 text-red-500" />}
-              </button>
-              
-              <button 
-                onClick={() => handleSwipe('right')} 
-                className="interactive w-20 h-20 bg-white dark:bg-white/10 border-4 border-black/5 dark:border-white/10 rounded-full flex items-center justify-center text-black dark:text-white hover:bg-yellow-400 hover:text-black transition-all shadow-[0_20px_50px_rgba(0,0,0,0.2)]"
-              >
-                <Heart size={36} fill="currentColor" />
-              </button>
+      <div className="absolute bottom-6 left-0 w-full px-6 z-50">
+          <div className="max-w-xs mx-auto flex items-center justify-center gap-6 pointer-events-auto">
+              <button onClick={() => handleSwipe('left')} className="w-14 h-14 bg-white dark:bg-zinc-900 border dark:border-white/10 rounded-full flex items-center justify-center text-black dark:text-white shadow-2xl active:scale-90 transition-all hover:bg-red-500 hover:text-white"><X size={28} /></button>
+              <button onClick={openUpgrade} className="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center text-black shadow-2xl relative active:scale-90 transition-all hover:scale-110"><Star size={32} fill="currentColor" />{!isPremium && <Lock size={10} className="absolute top-4 right-4 text-red-600" />}</button>
+              <button onClick={() => handleSwipe('right')} className="w-14 h-14 bg-white dark:bg-zinc-900 border dark:border-white/10 rounded-full flex items-center justify-center text-black dark:text-white shadow-2xl active:scale-90 transition-all hover:bg-yellow-400 hover:text-black"><Heart size={28} fill="currentColor" /></button>
           </div>
       </div>
-
-      {/* GRADIENT FADE OVER ACTION BAR */}
-      <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white dark:from-black to-transparent pointer-events-none z-40"></div>
+      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white dark:from-black to-transparent pointer-events-none z-40"></div>
     </div>
   );
 };
