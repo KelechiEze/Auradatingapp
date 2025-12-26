@@ -26,7 +26,7 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
     );
   }, []);
 
-const plans = [
+ const plans = [
     { 
       id: 'free', 
       name: 'Free Pulse', 

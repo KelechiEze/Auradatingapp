@@ -75,7 +75,7 @@ const SettingsPage: React.FC = () => {
   );
 
   return (
-    <div ref={containerRef} className="p-6 lg:p-12 space-y-12 pb-32 relative">
+    <div ref={containerRef} className="h-full overflow-y-auto no-scrollbar p-6 lg:p-12 space-y-12 pb-32 relative">
       {/* Deactivate Modal */}
       {showDeactivateModal && (
         <div 
