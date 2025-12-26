@@ -1,0 +1,9 @@
+{
+  "name": "Aura: Borderless Resonance",
+  "description": "The world's first emotionally-engineered global connection platform, designed for souls who transcend geography.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
