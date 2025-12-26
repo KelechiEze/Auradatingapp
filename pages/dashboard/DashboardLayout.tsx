@@ -1,4 +1,3 @@
-
 import React, { useEffect, useContext, useMemo, useState, createContext, useRef } from 'react';
 import { Outlet, NavLink, useLocation, Link } from 'react-router-dom';
 import { Heart, Users, Star, MessageSquare, User, Sparkles, LogOut, Settings, Globe, Radio, X, Check, Zap, Crown, Shield, Sun, Moon } from 'lucide-react';
@@ -32,9 +31,9 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
       name: 'Standard Orbit', 
       price: '$9.99', 
       period: '/ mo', 
-      desc: 'Core resonance',
-      swipes: '150 Swipes / Day',
-      features: ['150 Daily Pulses', 'See who Liked', 'Global Range']
+      desc: 'Basic resonance',
+      swipes: '20 Swipes / Day',
+      features: ['20 Daily Pulses', 'See who Liked', 'Local Range']
     },
     { 
       id: 'semi', 
@@ -43,7 +42,7 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
       period: '/ 6 mo', 
       desc: 'High frequency', 
       popular: true,
-      swipes: '500 Swipes / Day',
+      swipes: '100 Swipes / Day',
       features: ['500 Daily Pulses', 'Priority Nodes', '10 Soul Gifts']
     },
     { 
@@ -52,7 +51,7 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
       price: '$79.99', 
       period: '/ yr', 
       desc: 'Ultimate reach',
-      swipes: 'Infinite Swipes',
+      swipes: '200 Swipes',
       features: ['Infinite Pulses', 'Soul Mapping', 'Priority Support']
     },
   ];
@@ -94,6 +93,9 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
                 <div className="flex items-baseline gap-1">
                   <span className="text-xl font-black">{plan.price}</span>
                   <span className="text-[7px] font-bold opacity-40">{plan.period}</span>
+                </div>
+                <div className="mt-2 text-[6px] font-black uppercase tracking-widest text-yellow-500 opacity-80">
+                  {plan.swipes}
                 </div>
               </button>
             ))}
@@ -180,7 +182,7 @@ const DashboardLayout: React.FC = () => {
             {!isPremium && (
               <button onClick={() => setShowUpgrade(true)} className="w-full bg-yellow-400/10 text-yellow-400 p-3 rounded-xl border border-yellow-400/20 text-left hover:bg-yellow-400/20 transition-all">
                 <span className="text-[6px] font-black uppercase tracking-widest block mb-0.5">Upgrade</span>
-                <span className="text-[8px] font-bold opacity-70 leading-none truncate block">Infinite resonance.</span>
+                <span className="text-[8px] font-bold opacity-70 leading-none truncate block">Only 20 swipes/day</span>
               </button>
             )}
             <Link to="/" className="flex items-center gap-2 px-3 py-2 opacity-30 hover:opacity-100 transition-opacity font-black text-[8px] uppercase tracking-widest"><LogOut size={14} />Logout</Link>
