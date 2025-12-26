@@ -14,6 +14,8 @@ const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState<any>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const [activePhotoEditIdx, setActivePhotoEditIdx] = useState<number | null>(null);
 
   useEffect(() => {
     const savedData = localStorage.getItem('aura_user_profile');
@@ -47,8 +49,18 @@ const Profile: React.FC = () => {
     };
 
     if (savedData) {
-      setMyData(JSON.parse(savedData));
-      setEditForm(JSON.parse(savedData));
+      try {
+        const parsed = JSON.parse(savedData);
+        // Ensure photos are present even if quota was hit
+        if (!parsed.photos || parsed.photos.length === 0) {
+          parsed.photos = defaultData.photos;
+        }
+        setMyData(parsed);
+        setEditForm(parsed);
+      } catch (e) {
+        setMyData(defaultData);
+        setEditForm(defaultData);
+      }
     } else {
       setMyData(defaultData);
       setEditForm(defaultData);
@@ -67,10 +79,43 @@ const Profile: React.FC = () => {
     setIsEditing(false);
   };
 
+  const triggerPhotoUpload = (idx: number) => {
+    setActivePhotoEditIdx(idx);
+    photoInputRef.current?.click();
+  };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && activePhotoEditIdx !== null) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        // Update both editForm and myData if necessary, or just sync back
+        const newPhotos = [...(editForm.photos || [])];
+        newPhotos[activePhotoEditIdx] = result;
+        
+        const updated = { ...editForm, photos: newPhotos };
+        setEditForm(updated);
+        setMyData(updated);
+        localStorage.setItem('aura_user_profile', JSON.stringify(updated));
+        setActivePhotoEditIdx(null);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   if (!myData || !editForm) return null;
 
   return (
     <div ref={profileRef} className="h-full overflow-y-auto no-scrollbar p-4 lg:p-10 space-y-10 pb-32 max-w-5xl mx-auto">
+      <input 
+        type="file" 
+        ref={photoInputRef} 
+        className="hidden" 
+        accept="image/*" 
+        onChange={handlePhotoChange} 
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between">
          <div className="flex items-center gap-3">
@@ -108,24 +153,29 @@ const Profile: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        {/* Photos Column - Handling 4 images */}
+        {/* Photos Column */}
         <div className="lg:col-span-5 space-y-8">
            <div className="space-y-4">
               <h4 className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 ml-4 dark:text-white text-black">Resonance Visuals</h4>
               <div className="grid grid-cols-2 gap-3">
                  {myData.photos?.slice(0, 4).map((photo: string, idx: number) => (
-                   <div key={idx} className="aspect-square relative group rounded-2xl overflow-hidden shadow-xl border-2 dark:border-white/10 border-black/5 bg-black/5">
+                   <div key={idx} onClick={() => triggerPhotoUpload(idx)} className="aspect-square relative group rounded-2xl overflow-hidden shadow-xl border-2 dark:border-white/10 border-black/5 bg-black/5 cursor-pointer">
                       <img src={photo} className="w-full h-full object-cover" alt={`Resonance ${idx + 1}`} />
-                      <button className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Upload size={16} className="text-white" />
-                      </button>
+                      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Upload size={20} className="text-yellow-400 mb-2" />
+                        <span className="text-[7px] font-black uppercase text-white">Change Visual</span>
+                      </div>
                    </div>
                  ))}
-                 {[...Array(Math.max(0, 4 - (myData.photos?.length || 0)))].map((_, idx) => (
-                    <div key={`empty-${idx}`} className="aspect-square rounded-2xl border-2 border-dashed border-yellow-400/20 bg-black/5 dark:bg-white/5 flex items-center justify-center">
-                       <Upload size={16} className="opacity-20 text-yellow-400" />
-                    </div>
-                 ))}
+                 {[...Array(Math.max(0, 4 - (myData.photos?.length || 0)))].map((_, idx) => {
+                    const realIdx = (myData.photos?.length || 0) + idx;
+                    return (
+                      <div key={`empty-${idx}`} onClick={() => triggerPhotoUpload(realIdx)} className="aspect-square rounded-2xl border-2 border-dashed border-yellow-400/20 bg-black/5 dark:bg-white/5 flex flex-col items-center justify-center cursor-pointer hover:border-yellow-400 transition-all">
+                         <Upload size={16} className="opacity-20 text-yellow-400 mb-2" />
+                         <span className="text-[6px] font-black uppercase opacity-20">Add Signal</span>
+                      </div>
+                    );
+                 })}
               </div>
            </div>
 
@@ -206,5 +256,4 @@ const Profile: React.FC = () => {
     </div>
   );
 };
-
 export default Profile;

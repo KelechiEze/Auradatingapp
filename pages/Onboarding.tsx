@@ -77,8 +77,8 @@ const Onboarding: React.FC = () => {
       setCurrentStep(prev => prev + 1);
     } else {
       // Validate photos
-      const filledPhotos = formData.photos.filter(p => !!p).length;
-      if (filledPhotos < 4) {
+      const filledPhotosCount = formData.photos.filter(p => !!p).length;
+      if (filledPhotosCount < 4) {
         alert("Please upload all 4 images to synchronize your presence.");
         return;
       }
@@ -88,13 +88,13 @@ const Onboarding: React.FC = () => {
       
       setTimeout(() => {
         try {
-          // Attempt storage - high res images might hit 5MB limit
+          // Attempt storage
           localStorage.setItem('aura_user_profile', JSON.stringify(formData));
         } catch (e) {
-          console.warn("Storage limit exceeded, skipping local persistence of high-res photos.");
-          // Store minimal profile without photos as fallback
-          const minimalProfile = { ...formData, photos: [] };
-          localStorage.setItem('aura_user_profile', JSON.stringify(minimalProfile));
+          console.warn("Storage quota might be tight. Images are large.");
+          // Fallback if quota is exceeded: try to save without high-res photos
+          // In a real app we'd upload to a server
+          localStorage.setItem('aura_user_profile', JSON.stringify({ ...formData, photos: formData.photos.map(p => p.slice(0, 1000)) })); 
         }
         navigate('/otp');
       }, 8000);
