@@ -41,7 +41,8 @@ const Profile: React.FC = () => {
       photos: [
         'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80&w=400',
         'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400',
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400'
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400',
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400'
       ]
     };
 
@@ -66,15 +67,6 @@ const Profile: React.FC = () => {
     setIsEditing(false);
   };
 
-  const toggleItem = (field: string, item: string) => {
-    const current = editForm[field] || [];
-    if (current.includes(item)) {
-      setEditForm({ ...editForm, [field]: current.filter((i: string) => i !== item) });
-    } else {
-      setEditForm({ ...editForm, [field]: [...current, item] });
-    }
-  };
-
   if (!myData || !editForm) return null;
 
   return (
@@ -82,7 +74,7 @@ const Profile: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
          <div className="flex items-center gap-3">
-            <h2 className="text-3xl lg:text-5xl font-black tracking-tighter uppercase dark:text-white">
+            <h2 className="text-3xl lg:text-5xl font-black tracking-tighter uppercase dark:text-white text-black">
               {isEditing ? 'SYNC IDENTITY.' : 'PROFILE.'}
             </h2>
             {isPremium && (
@@ -107,7 +99,7 @@ const Profile: React.FC = () => {
                 <button onClick={() => setIsEditing(true)} className="w-12 h-12 bg-yellow-400 text-black rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg">
                   <Edit2 size={20} />
                 </button>
-                <button onClick={() => navigate('/dashboard/settings')} className="w-12 h-12 bg-slate-100 dark:bg-white/5 rounded-xl flex items-center justify-center hover:bg-yellow-400 hover:text-black transition-all dark:text-white">
+                <button onClick={() => navigate('/dashboard/settings')} className="w-12 h-12 bg-slate-100 dark:bg-white/5 rounded-xl flex items-center justify-center hover:bg-yellow-400 hover:text-black transition-all dark:text-white text-black">
                   <Settings size={20} />
                 </button>
               </>
@@ -116,58 +108,35 @@ const Profile: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        {/* Photos Column */}
+        {/* Photos Column - Handling 4 images */}
         <div className="lg:col-span-5 space-y-8">
            <div className="space-y-4">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 ml-4 dark:text-white">Resonance Visuals</h4>
+              <h4 className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 ml-4 dark:text-white text-black">Resonance Visuals</h4>
               <div className="grid grid-cols-2 gap-3">
-                 <div className="aspect-[3/4] col-span-2 relative group rounded-[40px] overflow-hidden border-4 border-yellow-400 shadow-2xl bg-black/5">
-                    <img src={myData.photos?.[0]} className="w-full h-full object-cover" />
-                    <button className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-md p-3 rounded-2xl text-white hover:bg-yellow-400 hover:text-black transition-all"><Upload size={16} /></button>
-                 </div>
-                 <div className="aspect-[3/4] relative rounded-3xl overflow-hidden shadow-xl border-2 dark:border-white/10 bg-black/5">
-                    <img src={myData.photos?.[1]} className="w-full h-full object-cover" />
-                    <button className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><Upload size={16} className="text-white" /></button>
-                 </div>
-                 <div className="aspect-[3/4] relative rounded-3xl overflow-hidden shadow-xl border-2 dark:border-white/10 bg-black/5">
-                    <img src={myData.photos?.[2]} className="w-full h-full object-cover" />
-                    <button className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><Upload size={16} className="text-white" /></button>
-                 </div>
-              </div>
-           </div>
-
-           <div className="text-center pt-4">
-              <div className="flex items-center justify-center gap-2">
-                 {isEditing ? (
-                   <div className="flex items-center gap-2">
-                     <input 
-                       value={editForm.name} 
-                       onChange={e => setEditForm({...editForm, name: e.target.value})} 
-                       className="bg-transparent border-b-2 border-yellow-400 outline-none text-2xl font-black tracking-tighter dark:text-white text-center w-32"
-                     />
-                     <span className="text-2xl font-black">,</span>
-                     <input 
-                       type="number"
-                       value={editForm.age} 
-                       onChange={e => setEditForm({...editForm, age: parseInt(e.target.value)})} 
-                       className="bg-transparent border-b-2 border-yellow-400 outline-none text-2xl font-black tracking-tighter dark:text-white text-center w-16"
-                     />
+                 {myData.photos?.slice(0, 4).map((photo: string, idx: number) => (
+                   <div key={idx} className="aspect-square relative group rounded-2xl overflow-hidden shadow-xl border-2 dark:border-white/10 border-black/5 bg-black/5">
+                      <img src={photo} className="w-full h-full object-cover" alt={`Resonance ${idx + 1}`} />
+                      <button className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Upload size={16} className="text-white" />
+                      </button>
                    </div>
-                 ) : (
-                   <h3 className="text-3xl font-black tracking-tighter dark:text-white">{myData.name}, {myData.age}</h3>
-                 )}
-                 <ShieldCheck size={24} className="text-yellow-400" />
+                 ))}
+                 {/* Placeholder if user has fewer than 4 */}
+                 {[...Array(Math.max(0, 4 - (myData.photos?.length || 0)))].map((_, idx) => (
+                    <div key={`empty-${idx}`} className="aspect-square rounded-2xl border-2 border-dashed border-yellow-400/20 bg-black/5 dark:bg-white/5 flex items-center justify-center">
+                       <Upload size={16} className="opacity-20 text-yellow-400" />
+                    </div>
+                 ))}
               </div>
-              <p className="text-[8px] font-black uppercase tracking-[0.5em] opacity-40 dark:text-white">Active Resonance Identity</p>
            </div>
 
            {!isPremium && !isEditing && (
-             <div className="p-8 bg-yellow-400 rounded-[40px] shadow-xl shadow-yellow-400/20 relative overflow-hidden group">
+             <div className="p-8 bg-yellow-400 rounded-2xl shadow-xl shadow-yellow-400/20 relative overflow-hidden group">
                 <Sparkles className="absolute -top-6 -right-6 text-black/10 scale-[2.5] group-hover:rotate-45 transition-transform duration-1000" />
                 <div className="relative z-10">
                    <h4 className="text-2xl font-black text-black leading-tight">Elevate your reach.</h4>
                    <p className="text-black/60 text-[10px] font-bold mt-2 uppercase tracking-widest">Join Elite for unlimited resonance.</p>
-                   <button onClick={openUpgrade} className="mt-6 w-full bg-black text-white py-4 rounded-2xl font-black text-[10px] tracking-widest uppercase hover:scale-105 transition-all">Go Premium</button>
+                   <button onClick={openUpgrade} className="mt-6 w-full bg-black text-white py-4 rounded-xl font-black text-[10px] tracking-widest uppercase hover:scale-105 transition-all">Go Premium</button>
                 </div>
              </div>
            )}
@@ -175,30 +144,30 @@ const Profile: React.FC = () => {
 
         {/* Form Column */}
         <div className="lg:col-span-7 space-y-8">
-           <div className="bg-slate-50 dark:bg-zinc-900 p-8 rounded-[40px] border border-black/5 dark:border-white/5 space-y-10 shadow-sm">
+           <div className="bg-slate-50 dark:bg-zinc-900 p-8 rounded-2xl border border-black/5 dark:border-white/5 space-y-10 shadow-sm">
               
               {/* Bio Section */}
               <div className="space-y-4">
                  <div className="flex items-center gap-2 opacity-30">
-                    <Info size={12} className="dark:text-white" />
-                    <h4 className="text-[10px] font-black uppercase tracking-widest dark:text-white">Soul Narrative</h4>
+                    <Info size={12} className="dark:text-white text-black" />
+                    <h4 className="text-[10px] font-black uppercase tracking-widest dark:text-white text-black">Soul Narrative</h4>
                  </div>
                  {isEditing ? (
                    <textarea 
                      rows={4} 
                      value={editForm.bio} 
                      onChange={e => setEditForm({...editForm, bio: e.target.value})} 
-                     className="w-full p-6 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-[24px] outline-none focus:border-yellow-400 italic text-sm dark:text-white transition-all"
+                     className="w-full p-6 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-2xl outline-none focus:border-yellow-400 italic text-sm dark:text-white transition-all"
                    />
                  ) : (
-                   <p className="text-xl italic font-light leading-snug dark:text-white">"{myData.bio}"</p>
+                   <p className="text-xl italic font-light leading-snug dark:text-white text-black">"{myData.bio}"</p>
                  )}
               </div>
 
               {/* Details Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                  <div className="space-y-5">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30 dark:text-white">Identity Node</h4>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30 dark:text-white text-black">Identity Node</h4>
                     <div className="space-y-4">
                        {isEditing ? (
                          <>
@@ -210,85 +179,19 @@ const Profile: React.FC = () => {
                              <MapPin size={14} className="text-yellow-400" />
                              <input value={editForm.location} onChange={e => setEditForm({...editForm, location: e.target.value})} placeholder="Location" className="bg-transparent outline-none text-xs font-bold dark:text-white w-full" />
                            </div>
-                           <div className="flex items-center gap-3 p-3 bg-white dark:bg-black rounded-xl border dark:border-white/5">
-                             <GraduationCap size={14} className="text-yellow-400" />
-                             <input value={editForm.education} onChange={e => setEditForm({...editForm, education: e.target.value})} placeholder="Education" className="bg-transparent outline-none text-xs font-bold dark:text-white w-full" />
-                           </div>
                          </>
                        ) : (
                          <>
-                           <div className="flex items-center gap-3 text-sm font-bold opacity-70 dark:text-white"><Briefcase size={16} className="text-yellow-400" /> {myData.role}</div>
-                           <div className="flex items-center gap-3 text-sm font-bold opacity-70 dark:text-white"><MapPin size={16} className="text-yellow-400" /> {myData.location}</div>
-                           <div className="flex items-center gap-3 text-sm font-bold opacity-70 dark:text-white"><GraduationCap size={16} className="text-yellow-400" /> {myData.education}</div>
+                           <div className="flex items-center gap-3 text-sm font-bold opacity-70 dark:text-white text-black"><Briefcase size={16} className="text-yellow-400" /> {myData.role}</div>
+                           <div className="flex items-center gap-3 text-sm font-bold opacity-70 dark:text-white text-black"><MapPin size={16} className="text-yellow-400" /> {myData.location}</div>
                          </>
                        )}
                     </div>
-                 </div>
-                 <div className="space-y-5">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30 dark:text-white">Sync Parameters</h4>
-                    <div className="space-y-3">
-                       {isEditing ? (
-                         <select 
-                           value={editForm.intent} 
-                           onChange={e => setEditForm({...editForm, intent: e.target.value})} 
-                           className="w-full p-4 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-xl outline-none font-black text-[10px] uppercase tracking-widest text-yellow-500"
-                         >
-                           {['Serious relationship', 'Marriage-minded', 'Casual discovery', 'Friendship orbit'].map(i => <option key={i} value={i}>{i}</option>)}
-                         </select>
-                       ) : (
-                         <div className="text-sm font-black text-yellow-500 uppercase tracking-widest">💍 {myData.intent}</div>
-                       )}
-                       <div className="text-[10px] font-black uppercase dark:text-white/60 tracking-widest">Preference: {myData.lookingFor}</div>
-                    </div>
-                 </div>
-              </div>
-
-              {/* Vibe Spectrum Tags */}
-              <div className="pt-10 border-t dark:border-white/10 border-black/5">
-                 <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30 mb-5 dark:text-white">Aura Traits</h4>
-                 <div className="flex flex-wrap gap-2">
-                    {isEditing ? (
-                      ['Funny', 'Calm', 'Adventurous', 'Romantic', 'Ambitious', 'Creative', 'Intellectual', 'Spiritual'].map(t => (
-                        <button 
-                          key={t} 
-                          onClick={() => toggleItem('traits', t)} 
-                          className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${editForm.traits.includes(t) ? 'bg-yellow-400 border-yellow-400 text-black shadow-md' : 'border-black/10 dark:border-white/10 dark:text-white/40 opacity-50'}`}
-                        >
-                          {t}
-                        </button>
-                      ))
-                    ) : (
-                      (myData.traits || []).map((t: string) => (
-                        <span key={t} className="px-4 py-2 bg-yellow-400 text-black rounded-full text-[9px] font-black uppercase tracking-widest">{t}</span>
-                      ))
-                    )}
-                 </div>
-              </div>
-
-              {/* Core Values */}
-              <div className="pt-6">
-                 <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30 mb-5 dark:text-white">Core Values</h4>
-                 <div className="flex flex-wrap gap-2">
-                    {isEditing ? (
-                      ['Honesty', 'Growth', 'Independence', 'Loyalty', 'Kindness', 'Ambition', 'Compassion'].map(v => (
-                        <button 
-                          key={v} 
-                          onClick={() => toggleItem('values', v)} 
-                          className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${editForm.values.includes(v) ? 'bg-black dark:bg-white dark:text-black text-white' : 'border-black/10 dark:border-white/10 dark:text-white/40 opacity-50'}`}
-                        >
-                          {v}
-                        </button>
-                      ))
-                    ) : (
-                      (myData.values || []).map((v: string) => (
-                        <span key={v} className="px-4 py-2 border dark:border-white/20 border-black/10 dark:text-white rounded-full text-[9px] font-black uppercase tracking-widest">{v}</span>
-                      ))
-                    )}
                  </div>
               </div>
 
               {/* Prompt Section */}
-              <div className="p-8 bg-black dark:bg-zinc-800 text-white rounded-[40px] relative overflow-hidden group border dark:border-white/5">
+              <div className="p-8 bg-black dark:bg-zinc-800 text-white rounded-2xl relative overflow-hidden group border dark:border-white/5">
                  <MessageSquare className="absolute top-4 right-4 text-yellow-400 opacity-20 group-hover:rotate-12 transition-all duration-1000" size={64} />
                  <h5 className="text-[8px] font-black uppercase tracking-[0.4em] opacity-50 mb-4 italic">Signal Pulse Prompt</h5>
                  {isEditing ? (

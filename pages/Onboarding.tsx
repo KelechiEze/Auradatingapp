@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import gsap from 'gsap';
 import { 
-  ArrowRight, ArrowLeft, Heart, Sparkles, Shield, User, MapPin, Calendar, 
-  Smile, Zap, MessageSquare, Briefcase, Globe, Star, Upload, Info, Navigation, Phone, X, Search
+  ArrowRight, ArrowLeft, Heart, Sparkles, Shield, User, MapPin, 
+  Upload, Info, Navigation, X
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../App';
@@ -22,7 +22,7 @@ const STEPS: Step[] = [
   { id: 4, title: "Personality", subtitle: "Lifestyle & Vibe", category: "VIBE" },
   { id: 5, title: "Values", subtitle: "Beliefs & Principles", category: "VALUES" },
   { id: 6, title: "Expression", subtitle: "Personal Aura", category: "AURA" },
-  { id: 7, title: "Visuals", subtitle: "Triple Presence", category: "MEDIA" },
+  { id: 7, title: "Visuals", subtitle: "Quad Presence", category: "MEDIA" },
 ];
 
 const Onboarding: React.FC = () => {
@@ -32,6 +32,8 @@ const Onboarding: React.FC = () => {
   const [locLoading, setLocLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const stepRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [activeUploadIdx, setActiveUploadIdx] = useState<number | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -43,7 +45,7 @@ const Onboarding: React.FC = () => {
     values: [] as string[], languages: [] as string[], belief: 'Spiritual',
     children: 'Want someday', relocate: 'Maybe',
     essentials: [] as string[], bio: '', prompt: 'Consistency and kindness.',
-    photos: [] as string[], verified: false
+    photos: [] as string[], verified: true // Auto-verified since face check is removed
   });
 
   useEffect(() => {
@@ -61,6 +63,10 @@ const Onboarding: React.FC = () => {
     if (currentStep < 7) {
       setCurrentStep(prev => prev + 1);
     } else {
+      if (formData.photos.length < 4) {
+        alert("Please upload all 4 images to continue.");
+        return;
+      }
       localStorage.setItem('aura_user_profile', JSON.stringify(formData));
       navigate('/otp');
     }
@@ -92,7 +98,6 @@ const Onboarding: React.FC = () => {
     setLocLoading(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        // In a real app, use reverse geocoding. For now, mock.
         updateField('location', `Detected: Lagos, NG`);
         setLocLoading(false);
       },
@@ -113,20 +118,35 @@ const Onboarding: React.FC = () => {
     </button>
   );
 
-  const handlePhotoUpload = (index: number) => {
-    // Mock upload
-    const mockUrls = [
-      'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80&w=400',
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400',
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400'
-    ];
-    const newPhotos = [...formData.photos];
-    newPhotos[index] = mockUrls[index % 3];
-    updateField('photos', newPhotos);
+  const triggerUpload = (index: number) => {
+    setActiveUploadIdx(index);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && activeUploadIdx !== null) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newPhotos = [...formData.photos];
+        newPhotos[activeUploadIdx] = reader.result as string;
+        updateField('photos', newPhotos);
+        setActiveUploadIdx(null);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
     <div ref={containerRef} className="min-h-screen pt-20 pb-20 px-6 dark:bg-black bg-white transition-colors duration-700 flex flex-col items-center justify-center">
+      <input 
+        type="file" 
+        ref={fileInputRef} 
+        className="hidden" 
+        accept="image/*" 
+        onChange={handleFileChange}
+      />
+      
       <div className="max-w-4xl w-full mb-12">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
@@ -145,7 +165,7 @@ const Onboarding: React.FC = () => {
         </div>
       </div>
 
-      <div ref={stepRef} className="max-w-2xl w-full bg-slate-50 dark:bg-zinc-900 p-12 rounded-[50px] border border-black/5 dark:border-white/10 shadow-2xl">
+      <div ref={stepRef} className="max-w-2xl w-full bg-slate-50 dark:bg-zinc-900 p-12 rounded-[24px] border border-black/5 dark:border-white/10 shadow-2xl">
         <div className="mb-10">
             <h2 className="text-4xl lg:text-5xl font-black tracking-tighter mb-4 leading-none dark:text-white text-black">{STEPS[currentStep - 1].title}.</h2>
             <p className="dark:text-white/40 text-black/40 text-lg font-light italic">"{STEPS[currentStep - 1].subtitle}"</p>
@@ -254,7 +274,7 @@ const Onboarding: React.FC = () => {
             <div className="space-y-8">
               <div className="space-y-4">
                 <label className="text-[10px] font-black uppercase tracking-widest opacity-30 ml-2">9. The Soul Narrative (Bio)</label>
-                <textarea rows={5} value={formData.bio} onChange={e => updateField('bio', e.target.value)} placeholder="Describe your frequency..." className="w-full p-6 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-3xl outline-none focus:border-yellow-400 italic text-lg dark:text-white" />
+                <textarea rows={5} value={formData.bio} onChange={e => updateField('bio', e.target.value)} placeholder="Describe your frequency..." className="w-full p-6 dark:bg-black bg-white border dark:border-white/10 border-black/5 rounded-[24px] outline-none focus:border-yellow-400 italic text-lg dark:text-white" />
               </div>
             </div>
           )}
@@ -262,10 +282,10 @@ const Onboarding: React.FC = () => {
           {currentStep === 7 && (
             <div className="space-y-10">
                <div className="space-y-6">
-                 <label className="text-[10px] font-black uppercase tracking-widest opacity-30 text-center block dark:text-white/40">10. Triple Resonance Presence (3 Photos Required)</label>
-                 <div className="grid grid-cols-3 gap-4">
-                    {[0, 1, 2].map(idx => (
-                      <div key={idx} onClick={() => handlePhotoUpload(idx)} className="aspect-[3/4] rounded-3xl overflow-hidden border-2 border-dashed border-yellow-400/20 hover:border-yellow-400 transition-all cursor-pointer relative group bg-black/5 dark:bg-white/5 flex flex-col items-center justify-center gap-3">
+                 <label className="text-[10px] font-black uppercase tracking-widest opacity-30 text-center block dark:text-white/40">10. Quad Presence Presence (4 Gallery Photos Required)</label>
+                 <div className="grid grid-cols-2 gap-4">
+                    {[0, 1, 2, 3].map(idx => (
+                      <div key={idx} onClick={() => triggerUpload(idx)} className="aspect-square rounded-2xl overflow-hidden border-2 border-dashed border-yellow-400/20 hover:border-yellow-400 transition-all cursor-pointer relative group bg-black/5 dark:bg-white/5 flex flex-col items-center justify-center gap-3">
                          {formData.photos[idx] ? (
                            <>
                              <img src={formData.photos[idx]} className="w-full h-full object-cover" />
@@ -281,12 +301,9 @@ const Onboarding: React.FC = () => {
                     ))}
                  </div>
                </div>
-               <div className="p-8 bg-yellow-400/5 border border-yellow-400/10 rounded-[40px] text-center">
-                  <Shield size={32} className="mx-auto text-yellow-400 mb-4" />
-                  <h4 className="text-xl font-black tracking-tighter uppercase mb-4 dark:text-white">Aura Identity Verification</h4>
-                  <button onClick={() => updateField('verified', true)} className={`px-10 py-4 rounded-2xl font-black text-[10px] tracking-widest uppercase transition-all shadow-xl ${formData.verified ? 'bg-green-500 text-white' : 'bg-black dark:bg-white dark:text-black text-white'}`}>
-                    {formData.verified ? "ID SYNCED ✓" : "ACTIVATE VIDEO ID"}
-                  </button>
+               <div className="p-6 bg-yellow-400/5 border border-yellow-400/10 rounded-2xl text-center">
+                  <Shield size={24} className="mx-auto text-yellow-400 mb-3" />
+                  <p className="text-[10px] font-black tracking-widest uppercase dark:text-white">Identity Secured via Global Encryption</p>
                </div>
             </div>
           )}

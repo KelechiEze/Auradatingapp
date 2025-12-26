@@ -1,7 +1,7 @@
 
 import React, { useEffect, useContext, useMemo, useState, createContext, useRef } from 'react';
 import { Outlet, NavLink, useLocation, Link } from 'react-router-dom';
-import { Heart, Users, Star, MessageSquare, User, Sparkles, LogOut, Settings, Globe, Radio, X, Check, Zap, Crown, Shield } from 'lucide-react';
+import { Heart, Users, Star, MessageSquare, User, Sparkles, LogOut, Settings, Globe, Radio, X, Check, Zap, Crown, Shield, Sun, Moon } from 'lucide-react';
 import gsap from 'gsap';
 import { ThemeContext } from '../../App';
 
@@ -63,7 +63,7 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
     <div className="fixed inset-0 z-[2000] bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4">
       <div 
         ref={modalContainerRef} 
-        className="w-full max-w-xl bg-white dark:bg-black rounded-[32px] max-h-[90vh] overflow-y-auto no-scrollbar border dark:border-white/10 border-black/5 shadow-2xl relative"
+        className="w-full max-w-xl bg-white dark:bg-black rounded-[24px] max-h-[90vh] overflow-y-auto no-scrollbar border dark:border-white/10 border-black/5 shadow-2xl relative"
       >
         <div className="p-8 lg:p-10">
           <button onClick={onClose} className="absolute top-5 right-5 p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all z-50">
@@ -71,7 +71,7 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
           </button>
 
           <div className="text-center space-y-3 mb-6">
-            <div className="w-14 h-14 bg-yellow-400 text-black rounded-2xl mx-auto flex items-center justify-center shadow-lg ring-4 ring-yellow-400/10">
+            <div className="w-14 h-14 bg-yellow-400 text-black rounded-xl mx-auto flex items-center justify-center shadow-lg ring-4 ring-yellow-400/10">
               <Crown size={24} />
             </div>
             <div className="space-y-0.5">
@@ -85,7 +85,7 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
               <button 
                 key={plan.id}
                 onClick={() => setSelectedPlan(plan.id)}
-                className={`p-4 rounded-[20px] border-2 transition-all text-left relative flex flex-col ${selectedPlan === plan.id ? 'border-yellow-400 bg-yellow-400/5' : 'border-black/5 dark:border-white/5 opacity-60'}`}
+                className={`p-4 rounded-[16px] border-2 transition-all text-left relative flex flex-col ${selectedPlan === plan.id ? 'border-yellow-400 bg-yellow-400/5' : 'border-black/5 dark:border-white/5 opacity-60'}`}
               >
                 {plan.popular && (
                   <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 bg-yellow-400 text-black px-2 py-0.5 rounded-full text-[6px] font-black uppercase tracking-widest">Popular</span>
@@ -99,7 +99,7 @@ const UpgradeModal = ({ onClose }: { onClose: () => void }) => {
             ))}
           </div>
 
-          <div className="bg-slate-50 dark:bg-white/5 p-5 rounded-[24px] border dark:border-white/10 mb-6">
+          <div className="bg-slate-50 dark:bg-white/5 p-5 rounded-[20px] border dark:border-white/10 mb-6">
             <div className="grid grid-cols-1 gap-3">
               {currentPlan.features.map((feature, i) => (
                 <div key={i} className="flex items-center gap-2.5 text-xs font-bold opacity-70">
@@ -142,10 +142,11 @@ const DashboardLayout: React.FC = () => {
 
   return (
     <PremiumContext.Provider value={{ isPremium, openUpgrade: () => setShowUpgrade(true) }}>
-      <div className="flex h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-hidden">
+      <div className="flex h-screen w-full bg-white dark:bg-black transition-colors duration-500 overflow-hidden relative">
         {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
         
-        <aside className="hidden lg:flex flex-col w-52 border-r dark:border-white/5 border-black/5 p-4 shrink-0 bg-slate-50 dark:bg-black">
+        {/* Desktop Sidebar (Left) */}
+        <aside className="hidden lg:flex flex-col w-52 border-r dark:border-white/5 border-black/5 p-4 shrink-0 bg-slate-50 dark:bg-black z-50">
           <div className="mb-6 flex items-center gap-2 px-1">
             <div className="bg-yellow-400 p-1.5 rounded-lg shadow-lg">
               <Radio className="text-black" size={16} strokeWidth={3} />
@@ -186,46 +187,64 @@ const DashboardLayout: React.FC = () => {
           </div>
         </aside>
 
+        {/* Mobile Sidebar (Left Rail) - Replaces Bottom Nav for visibility */}
+        <nav className="lg:hidden w-16 h-full dark:bg-black/95 bg-white/95 backdrop-blur-3xl border-r dark:border-white/10 border-black/5 flex flex-col items-center py-6 gap-6 z-[100] shadow-[10px_0_30px_rgba(0,0,0,0.05)]">
+          <div className="mb-4">
+            <Radio className="text-yellow-400" size={24} strokeWidth={3} />
+          </div>
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path || (item.path === '/dashboard' && location.pathname === '/dashboard/');
+            return (
+              <NavLink key={item.label} to={item.path} className="relative group p-3 transition-all">
+                <item.icon size={22} className={isActive ? 'text-yellow-400' : 'dark:text-white text-black opacity-30 group-hover:opacity-100'} fill={isActive ? "currentColor" : "none"} strokeWidth={isActive ? 3 : 2} />
+                {isActive && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-yellow-400 rounded-r-full shadow-[2px_0_10px_rgba(250,204,21,0.5)]"></div>
+                )}
+                {item.badge && !isActive && (
+                  <div className="absolute top-1 right-1 w-4 h-4 bg-yellow-400 text-black text-[8px] font-black rounded-full flex items-center justify-center border-2 border-white dark:border-black shadow-md z-10">
+                    {item.badge}
+                  </div>
+                )}
+              </NavLink>
+            );
+          })}
+          <div className="mt-auto flex flex-col items-center gap-6">
+            <button 
+              onClick={toggleTheme} 
+              className={`p-3 rounded-xl transition-all ${isDark ? 'text-yellow-400' : 'bg-black text-white shadow-xl'}`}
+            >
+              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <Link to="/dashboard/profile" className="w-8 h-8 rounded-lg overflow-hidden border-2 border-yellow-400 shadow-lg">
+              <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80&w=100" alt="Me" className="w-full h-full object-cover" />
+            </Link>
+          </div>
+        </nav>
+
         <div className="flex-1 flex flex-col h-full relative overflow-hidden">
           <header className="px-5 py-3 flex items-center justify-between border-b dark:border-white/5 border-black/5 shrink-0 z-20 bg-white/80 dark:bg-black/80 backdrop-blur-xl">
-            <div className="lg:hidden flex items-center gap-2">
-              <Radio className="text-yellow-400" size={18} strokeWidth={3} />
+            <div className="flex items-center gap-2">
               <h1 className="text-lg font-black tracking-tighter dark:text-white text-black uppercase">AURA<span className="text-yellow-400">.</span></h1>
             </div>
-            <div className="hidden lg:block">
-               <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest opacity-40">
-                  <Globe size={10} />
-                  Node: <span className="text-yellow-400">Connected</span>
-               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button onClick={toggleTheme} className="p-1.5 opacity-40 hover:opacity-100 transition-opacity">{isDark ? <Sparkles size={14} /> : <Crown size={14} />}</button>
-              <Link to="/dashboard/profile" className="w-8 h-8 rounded-full overflow-hidden border-2 border-yellow-400"><img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&q=80&w=100" alt="Me" className="w-full h-full object-cover" /></Link>
+            <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-2 text-[8px] font-black uppercase tracking-widest opacity-40">
+                <Globe size={10} />
+                Node: <span className="text-yellow-400">Connected</span>
+              </div>
+              <button 
+                onClick={toggleTheme} 
+                className={`hidden lg:block p-2 rounded-lg transition-all ${isDark ? 'opacity-40 hover:opacity-100 dark:text-white' : 'bg-black text-white shadow-lg'}`}
+              >
+                {isDark ? <Sun size={14} /> : <Moon size={14} />}
+              </button>
             </div>
           </header>
 
-          <div className="flex-1 overflow-y-auto no-scrollbar dash-view">
-            <div className="max-w-3xl mx-auto h-full px-4 lg:px-6">
+          <div className="flex-1 overflow-y-auto no-scrollbar dash-view bg-slate-50 dark:bg-black">
+            <div className="max-w-4xl mx-auto h-full px-4 lg:px-6">
               <Outlet />
             </div>
           </div>
-
-          <nav className="lg:hidden shrink-0 h-16 dark:bg-black/95 bg-white/95 backdrop-blur-2xl border-t dark:border-white/10 px-1 flex items-center justify-around z-30 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path || (item.path === '/dashboard' && location.pathname === '/dashboard/');
-              return (
-                <NavLink key={item.label} to={item.path} className="flex flex-col items-center gap-0.5 py-1 relative px-3">
-                  <item.icon size={20} className={isActive ? 'text-yellow-400' : 'dark:text-white text-black opacity-40'} fill={isActive ? "currentColor" : "none"} strokeWidth={isActive ? 3 : 2} />
-                  <span className={`text-[7px] font-black uppercase tracking-widest transition-all ${isActive ? 'text-yellow-400' : 'opacity-0'}`}>{item.label}</span>
-                  {item.badge && !isActive && (
-                    <div className="absolute top-0 right-1.5 w-4 h-4 bg-yellow-400 text-black text-[8px] font-black rounded-full flex items-center justify-center border-2 border-white dark:border-black shadow-md z-10">
-                      {item.badge}
-                    </div>
-                  )}
-                </NavLink>
-              );
-            })}
-          </nav>
         </div>
       </div>
     </PremiumContext.Provider>

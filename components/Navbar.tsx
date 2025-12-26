@@ -1,12 +1,12 @@
 
 import React, { useEffect, useRef, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Heart, Globe, User, Menu, X, Sun, Moon, Radio } from 'lucide-react';
+import { Heart, Globe, User, Menu, X, Radio } from 'lucide-react';
 import gsap from 'gsap';
 import { ThemeContext } from '../App';
 
 const Navbar: React.FC = () => {
-  const { isDark, toggleTheme } = useContext(ThemeContext);
+  const { isDark } = useContext(ThemeContext);
   const navRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -50,14 +50,6 @@ const Navbar: React.FC = () => {
             </Link>
           ))}
           
-          <button 
-            onClick={toggleTheme}
-            className="interactive p-2 rounded-full dark:bg-white/5 bg-black/5 dark:text-white text-black hover:bg-yellow-400 hover:text-black transition-all"
-            aria-label="Toggle Theme"
-          >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-
           <Link 
             to="/auth" 
             className="interactive bg-yellow-400 text-black px-6 py-2.5 rounded-xl font-black text-sm tracking-widest hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all flex items-center gap-2"
@@ -69,13 +61,6 @@ const Navbar: React.FC = () => {
 
         {/* Mobile Menu Button */}
         <div className="flex items-center gap-4 md:hidden">
-            <button 
-              onClick={toggleTheme} 
-              className="p-2 dark:text-white text-black"
-              aria-label="Toggle Theme"
-            >
-                {isDark ? <Sun size={24} /> : <Moon size={24} />}
-            </button>
             <button 
                 className="text-yellow-400"
                 onClick={() => setIsOpen(!isOpen)}

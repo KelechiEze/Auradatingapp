@@ -55,7 +55,8 @@ const OTPVerification: React.FC = () => {
           {otp.map((digit, i) => (
             <input
               key={i}
-              ref={el => inputs.current[i] = el}
+              // Fix: Wrapped assignment in braces to return void, resolving TypeScript Ref type error.
+              ref={el => { inputs.current[i] = el; }}
               type="text"
               maxLength={1}
               value={digit}

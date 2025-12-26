@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <title>Aura - Find Genuine Love Globally</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -25,6 +25,8 @@
         background-color: #000;
         margin: 0;
         overflow-x: hidden;
+        /* Prevent elastic scroll issues on mobile */
+        overscroll-behavior-y: none;
       }
       .no-scrollbar::-webkit-scrollbar {
         display: none;
@@ -33,7 +35,10 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-      /* Custom Cursor styles handled in React */
+      /* Fix for iOS zoom on input */
+      input, textarea, select {
+        font-size: 16px !important;
+      }
     </style>
     <script type="importmap">
     {

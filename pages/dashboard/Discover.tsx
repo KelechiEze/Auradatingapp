@@ -48,7 +48,6 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
 
   const photos = profile.photos && profile.photos.length > 0 ? profile.photos : [profile.img];
 
-  // FIX: Using React.FC to properly handle children and key props in JSX
   const Tag: React.FC<{ children: React.ReactNode, icon?: any }> = ({ children, icon: Icon }) => (
     <div className="px-3 py-1.5 bg-slate-100 dark:bg-white/5 rounded-full flex items-center gap-1.5 border dark:border-white/10 border-black/5 shrink-0">
       {Icon && <Icon size={10} className="text-yellow-500" />}
@@ -56,7 +55,6 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
     </div>
   );
 
-  // FIX: Using React.FC to properly handle children in JSX
   const SectionTitle: React.FC<{ children: React.ReactNode, icon: any }> = ({ children, icon: Icon }) => (
     <div className="flex items-center gap-2 opacity-30 mb-3">
       <Icon size={12} />
@@ -67,7 +65,7 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
   return (
     <div className="space-y-8 pb-32">
       {/* Photo Carousel */}
-      <div className="relative aspect-[4/5] w-full rounded-[40px] overflow-hidden group shadow-2xl">
+      <div className="relative aspect-[4/5] w-full rounded-[20px] overflow-hidden group shadow-2xl">
          <img src={photos[activePhotoIdx]} alt={profile.name} className="absolute inset-0 w-full h-full object-cover transition-all duration-700" />
          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
          
@@ -88,7 +86,7 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
       <div className="space-y-4">
         <SectionTitle icon={Info}>The Narrative</SectionTitle>
         <p className="text-xl md:text-2xl italic font-light dark:text-white text-black leading-snug">"{profile.bio || "Searching resonance..."}"</p>
-        <div className="p-6 bg-black dark:bg-white text-white dark:text-black rounded-[28px] relative overflow-hidden group">
+        <div className="p-6 bg-black dark:bg-white text-white dark:text-black rounded-[20px] relative overflow-hidden group">
            <Sparkles className="absolute -top-3 -right-3 text-yellow-400 opacity-10 group-hover:scale-125 transition-transform" size={60} />
            <p className="text-lg font-black tracking-tighter leading-tight italic">"{profile.prompt || "Authenticity wins."}"</p>
         </div>
@@ -98,98 +96,37 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
       <div className="space-y-4">
         <SectionTitle icon={User}>Core Identity</SectionTitle>
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+          <div className="p-4 bg-white dark:bg-white/5 rounded-xl border dark:border-white/10 border-black/5">
             <span className="text-[7px] font-black uppercase tracking-widest opacity-40 block mb-1 dark:text-white">Professional Role</span>
             <div className="flex items-center gap-2 font-black text-xs dark:text-white">
               <Briefcase size={12} className="text-yellow-500" />
               {profile.role || "Soul"}
             </div>
           </div>
-          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+          <div className="p-4 bg-white dark:bg-white/5 rounded-xl border dark:border-white/10 border-black/5">
             <span className="text-[7px] font-black uppercase tracking-widest opacity-40 block mb-1 dark:text-white">Education</span>
             <div className="flex items-center gap-2 font-black text-xs dark:text-white">
               <GraduationCap size={12} className="text-yellow-500" />
               {profile.education || "Global Origin"}
             </div>
           </div>
-          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+          <div className="p-4 bg-white dark:bg-white/5 rounded-xl border dark:border-white/10 border-black/5">
             <span className="text-[7px] font-black uppercase tracking-widest opacity-40 block mb-1 dark:text-white">Intent Resonance</span>
             <p className="text-xs font-black text-yellow-500 uppercase">💍 {profile.intent}</p>
           </div>
-          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
+          <div className="p-4 bg-white dark:bg-white/5 rounded-xl border dark:border-white/10 border-black/5">
             <span className="text-[7px] font-black uppercase tracking-widest opacity-40 block mb-1 dark:text-white">Looking For</span>
             <p className="text-xs font-black uppercase dark:text-white">{profile.lookingFor || "Everyone"}</p>
           </div>
         </div>
       </div>
 
-      {/* Aura Spectrum (Tags) */}
-      <div className="space-y-6">
-        <div>
-          <SectionTitle icon={Zap}>Aura Spectrum</SectionTitle>
-          <div className="flex flex-wrap gap-2">
-            {(profile.traits || []).map((t: string) => <Tag key={t} icon={Sparkles}>{t}</Tag>)}
-          </div>
-        </div>
-        <div>
-          <SectionTitle icon={Shield}>Core Values</SectionTitle>
-          <div className="flex flex-wrap gap-2">
-            {(profile.values || []).map((v: string) => <Tag key={v} icon={Heart}>{v}</Tag>)}
-          </div>
-        </div>
-      </div>
-
-      {/* Lifestyle Sync */}
-      <div className="space-y-4">
-        <SectionTitle icon={Compass}>Lifestyle Sync</SectionTitle>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
-            <div className="flex items-center gap-2 mb-1 opacity-40">
-              <Star size={10} />
-              <span className="text-[7px] font-black uppercase tracking-widest dark:text-white">Weekend Style</span>
-            </div>
-            <p className="text-xs font-black dark:text-white">{profile.weekend || "Exploring"}</p>
-          </div>
-          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
-            <div className="flex items-center gap-2 mb-1 opacity-40">
-              <Wine size={10} />
-              <span className="text-[7px] font-black uppercase tracking-widest dark:text-white">Social Vibe</span>
-            </div>
-            <p className="text-xs font-black dark:text-white">Drinks: {profile.drinks || "Sometimes"}</p>
-          </div>
-          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
-            <div className="flex items-center gap-2 mb-1 opacity-40">
-              <Moon size={10} />
-              <span className="text-[7px] font-black uppercase tracking-widest dark:text-white">Beliefs</span>
-            </div>
-            <p className="text-xs font-black dark:text-white">{profile.belief || "Spiritual"}</p>
-          </div>
-          <div className="p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5">
-            <div className="flex items-center gap-2 mb-1 opacity-40">
-              <Baby size={10} />
-              <span className="text-[7px] font-black uppercase tracking-widest dark:text-white">Children</span>
-            </div>
-            <p className="text-xs font-black dark:text-white">{profile.children || "Not specified"}</p>
-          </div>
-          <div className="col-span-2 p-4 bg-white dark:bg-white/5 rounded-2xl border dark:border-white/10 border-black/5 flex items-center justify-between">
-            <div className="flex items-center gap-2 opacity-40">
-              <Globe size={10} />
-              <span className="text-[7px] font-black uppercase tracking-widest dark:text-white">Willingness to Relocate</span>
-            </div>
-            <p className="text-xs font-black dark:text-white">{profile.relocate || "Open to travel"}</p>
-          </div>
-        </div>
-      </div>
-
       {/* Interaction */}
-      <div className="p-6 bg-yellow-400/5 border border-yellow-400/10 rounded-[32px] space-y-4">
+      <div className="p-6 bg-yellow-400/5 border border-yellow-400/10 rounded-[20px] space-y-4">
           <div className="flex items-center gap-2 text-yellow-400">
             <MessageSquare size={16} />
             <span className="text-[10px] font-black uppercase tracking-widest">Resonance Pulse</span>
           </div>
-          <p className="text-[9px] font-bold opacity-60 dark:text-white leading-relaxed">
-            Sending a compliment signal increases matching resonance by 40%.
-          </p>
           <div className="relative">
              <input value={compliment} onChange={(e) => setCompliment(e.target.value)} placeholder="Sync a compliment..." className="w-full bg-white dark:bg-zinc-800 border dark:border-white/10 rounded-xl py-4 px-5 focus:border-yellow-400 outline-none text-xs font-bold pr-14 transition-all dark:text-white" />
              <button className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-yellow-400 text-black rounded-lg flex items-center justify-center shadow-lg active:scale-95 transition-all"><Send size={16} /></button>
@@ -252,12 +189,12 @@ const Discover: React.FC = () => {
 
   if (!profile) return (
     <div className="h-full flex flex-col items-center justify-center p-6 text-center space-y-6">
-      <div className="w-24 h-24 bg-yellow-400 rounded-[32px] flex items-center justify-center animate-bounce shadow-2xl shadow-yellow-400/20"><Heart size={48} className="text-black" /></div>
+      <div className="w-20 h-20 bg-yellow-400 rounded-xl flex items-center justify-center animate-bounce shadow-2xl shadow-yellow-400/20"><Heart size={40} className="text-black" /></div>
       <div className="space-y-2">
         <h2 className="text-3xl font-black tracking-tighter uppercase dark:text-white">OUT OF ORBIT.</h2>
         <p className="text-xs font-bold opacity-40 uppercase tracking-widest dark:text-white/40">Broaden your filters to find more souls.</p>
       </div>
-      <button onClick={() => { setCurrentIndex(0); setShowFilters(true); }} className="bg-black dark:bg-white text-white dark:text-black px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl active:scale-95 transition-all">Adjust Filters</button>
+      <button onClick={() => { setCurrentIndex(0); setShowFilters(true); }} className="bg-black dark:bg-white text-white dark:text-black px-10 py-4 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl active:scale-95 transition-all">Adjust Filters</button>
     </div>
   );
 
@@ -296,7 +233,7 @@ const Discover: React.FC = () => {
                    className="w-full h-1.5 bg-white/10 accent-yellow-400 rounded-full" 
                  />
               </div>
-              <button onClick={() => { setShowFilters(false); setCurrentIndex(0); }} className="w-full bg-yellow-400 text-black py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">Apply Resonance</button>
+              <button onClick={() => { setShowFilters(false); setCurrentIndex(0); }} className="w-full bg-yellow-400 text-black py-5 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl">Apply Resonance</button>
            </div>
         </div>
       )}
@@ -308,7 +245,7 @@ const Discover: React.FC = () => {
 
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto no-scrollbar scroll-smooth">
         <div ref={cardRef} className="max-w-xl mx-auto px-4 py-4 lg:py-6 space-y-6">
-            <div className="relative aspect-[4/5] w-full rounded-[40px] overflow-hidden shadow-2xl border-2 dark:border-white/5">
+            <div className="relative aspect-[4/5] w-full rounded-[24px] overflow-hidden shadow-2xl border-2 dark:border-white/5">
               <img src={profile.img} alt={profile.name} className="absolute inset-0 w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
               <div className="absolute bottom-0 left-0 w-full p-8 space-y-3">
@@ -317,10 +254,6 @@ const Discover: React.FC = () => {
                      <span className="text-[8px] font-black text-black uppercase tracking-widest">Verified Identity</span>
                  </div>
                  <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-none uppercase">{profile.name}, {profile.age}</h2>
-                 <div className="flex flex-wrap gap-4 text-white/80 font-bold text-xs">
-                   <div className="flex items-center gap-1.5"><MapPin size={14} className="text-yellow-400" /> {profile.location}</div>
-                   <div className="flex items-center gap-1.5"><Briefcase size={14} className="text-yellow-400" /> {profile.role}</div>
-                 </div>
               </div>
             </div>
             <ProfileDetailView profile={profile} />
