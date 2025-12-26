@@ -18,8 +18,7 @@ export const mockProfiles = [
     belief: 'Goal-oriented', children: 'Want someday', relocate: 'Always open',
     values: ["Growth", "Honesty", "Ambition"],
     img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800",
-    photos: ["https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"],
-    compliments: ["Visionary!"] 
+    photos: ["https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"]
   },
   { 
     id: 2, name: "Sarah", age: 26, role: "UI Designer", location: "Abuja, NG", intent: "Serious", commitment: "High", 
@@ -29,8 +28,7 @@ export const mockProfiles = [
     belief: 'Spiritual', children: 'Want someday', relocate: 'Maybe',
     values: ["Kindness", "Creativity", "Loyalty"],
     img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=800",
-    photos: ["https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=800"],
-    compliments: ["Calming."] 
+    photos: ["https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=800", "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=800"]
   },
   { 
     id: 3, name: "Elena", age: 28, role: "Artist", location: "Lisbon, PT", intent: "Relationship", traits: ["Romantic", "Free-spirited"], verified: true, 
@@ -43,75 +41,87 @@ export const mockProfiles = [
   },
   {
     id: 4, name: "Marcus", age: 32, role: "Architect", location: "Berlin, DE", intent: "Serious", verified: true,
-    gender: 'Man', lookingFor: 'Women', education: "MSc Architecture", bio: "Minimalist in design, maximalist in love. Let's build something lasting.",
+    gender: 'Man', lookingFor: 'Women', education: "MSc Architecture", bio: "Minimalist in design, maximalist in love.",
     img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=800"]
   },
   {
     id: 5, name: "Yuki", age: 24, role: "Photographer", location: "Tokyo, JP", intent: "Casual", verified: true,
-    gender: 'Woman', lookingFor: 'Everyone', education: "Tokyo Arts", bio: "Capturing moments between the neon lights. Seeking a subject who sees the world in raw colors.",
+    gender: 'Woman', lookingFor: 'Everyone', education: "Tokyo Arts", bio: "Capturing moments between the neon lights.",
     img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800"]
   },
   {
     id: 6, name: "Chloe", age: 27, role: "Sommelier", location: "Paris, FR", intent: "Relationship", verified: true,
-    gender: 'Woman', lookingFor: 'Men', education: "Wine Academy", bio: "Life is too short for bad wine and shallow conversations.",
+    gender: 'Woman', lookingFor: 'Men', education: "Wine Academy", bio: "Life is too short for bad wine.",
     img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&q=80&w=800"]
   },
   {
     id: 7, name: "David", age: 30, role: "Software Engineer", location: "New York, US", intent: "Serious", verified: true,
-    gender: 'Man', lookingFor: 'Women', education: "MIT", bio: "Debugging code by day, exploring the concrete jungle by night. Looking for a co-founder for life.",
+    gender: 'Man', lookingFor: 'Women', education: "MIT", bio: "Debugging code by day, exploring by night.",
     img: "https://images.unsplash.com/photo-1506863530036-1efeddceb993?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1506863530036-1efeddceb993?auto=format&fit=crop&q=80&w=800"]
   },
   {
     id: 8, name: "Amara", age: 29, role: "Yoga Instructor", location: "Bali, ID", intent: "Relationship", verified: true,
-    gender: 'Woman', lookingFor: 'Everyone', education: "Global Wellness", bio: "Manifesting magic and seeking a soul to share sunrises with.",
+    gender: 'Woman', lookingFor: 'Everyone', education: "Global Wellness", bio: "Manifesting magic every single day.",
     img: "https://images.unsplash.com/photo-1514315384763-ba401779410f?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1514315384763-ba401779410f?auto=format&fit=crop&q=80&w=800"]
   },
   {
     id: 9, name: "Liam", age: 31, role: "Journalist", location: "London, UK", intent: "Casual", verified: false,
-    gender: 'Man', lookingFor: 'Women', education: "Oxford", bio: "Chasing stories and good coffee. Always packed for the next adventure.",
+    gender: 'Man', lookingFor: 'Women', education: "Oxford", bio: "Chasing stories and exceptional coffee.",
     img: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=800"]
   },
   {
     id: 10, name: "Sofia", age: 25, role: "Fashion Stylist", location: "Milan, IT", intent: "Serious", verified: true,
-    gender: 'Woman', lookingFor: 'Men', education: "Istituto Marangoni", bio: "Elegance is the only beauty that never fades. Let's create a timeless connection.",
+    gender: 'Woman', lookingFor: 'Men', education: "Istituto Marangoni", bio: "Elegance is the only beauty that never fades.",
     img: "https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?auto=format&fit=crop&q=80&w=800"]
   },
   {
     id: 11, name: "Arjun", age: 34, role: "Chef", location: "Mumbai, IN", intent: "Relationship", verified: true,
-    gender: 'Man', lookingFor: 'Women', education: "Culinary Institute", bio: "Spicing up life, one dish at a time. Looking for someone to share my kitchen and my heart.",
+    gender: 'Man', lookingFor: 'Women', education: "Culinary Institute", bio: "Spicing up life, one dish at a time.",
     img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=800"]
   },
   {
     id: 12, name: "Isabella", age: 28, role: "Marine Biologist", location: "Sydney, AU", intent: "Serious", verified: true,
-    gender: 'Woman', lookingFor: 'Men', education: "University of Queensland", bio: "Deep sea explorer seeking a partner who isn't afraid of the deep end.",
+    gender: 'Woman', lookingFor: 'Men', education: "University of Queensland", bio: "Deep sea explorer seeking a partner.",
     img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=800"]
   },
   {
     id: 13, name: "Noah", age: 26, role: "Musician", location: "Nashville, US", intent: "Relationship", verified: true,
-    gender: 'Man', lookingFor: 'Everyone', education: "Belmont", bio: "Writing songs about places I've never been. Maybe you're the melody I've been looking for.",
-    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800",
-    photos: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"]
+    gender: 'Man', lookingFor: 'Everyone', education: "Belmont", bio: "Writing songs about places I've never been.",
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
+    photos: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"]
   },
   {
     id: 14, name: "Mia", age: 23, role: "Grad Student", location: "Toronto, CA", intent: "Casual", verified: true,
-    gender: 'Woman', lookingFor: 'Men', education: "UofT", bio: "Struggling with my thesis but winning at life. Let's grab a poutine and talk about nothing.",
+    gender: 'Woman', lookingFor: 'Men', education: "UofT", bio: "Winning at life, struggling with a thesis.",
     img: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=800"]
   },
   {
     id: 15, name: "Ethan", age: 33, role: "Creative Director", location: "San Francisco, US", intent: "Serious", verified: true,
-    gender: 'Man', lookingFor: 'Women', education: "Berkeley", bio: "Thinking outside the box but looking for a home within someone's heart.",
+    gender: 'Man', lookingFor: 'Women', education: "Berkeley", bio: "Thinking outside the box.",
     img: "https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&q=80&w=800",
     photos: ["https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 16, name: "Kemi", age: 27, role: "Entrepreneur", location: "Lagos, NG", intent: "Serious", verified: true,
+    gender: 'Woman', lookingFor: 'Men', education: "Unilag", bio: "Building the next big thing in Africa.",
+    img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&q=80&w=800"]
+  },
+  {
+    id: 17, name: "Tunde", age: 29, role: "Doctor", location: "Ibadan, NG", intent: "Relationship", verified: true,
+    gender: 'Man', lookingFor: 'Women', education: "UCH", bio: "Dedicated to saving lives and finding my own.",
+    img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800",
+    photos: ["https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800"]
   }
 ];
 
@@ -130,7 +140,6 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
 
   return (
     <div className="space-y-8 pb-48">
-      {/* Photo Carousel */}
       <div className="relative aspect-[4/5] w-full rounded-[20px] overflow-hidden group shadow-2xl">
          <img src={photos[activePhotoIdx]} alt={profile.name} className="absolute inset-0 w-full h-full object-cover transition-all duration-700" />
          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
@@ -148,7 +157,6 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
          </div>
       </div>
 
-      {/* Narrative Section */}
       <div className="space-y-4">
         <SectionTitle icon={Info}>The Narrative</SectionTitle>
         <p className="text-xl md:text-2xl italic font-light dark:text-white text-black leading-snug">"{profile.bio || "Searching resonance..."}"</p>
@@ -158,7 +166,6 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
         </div>
       </div>
 
-      {/* Core Identity */}
       <div className="space-y-4">
         <SectionTitle icon={User}>Core Identity</SectionTitle>
         <div className="grid grid-cols-2 gap-3">
@@ -187,7 +194,6 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
         </div>
       </div>
 
-      {/* Interaction */}
       <div className="p-6 bg-yellow-400/5 border border-yellow-400/10 rounded-[20px] space-y-4">
           <div className="flex items-center gap-2 text-yellow-400">
             <MessageSquare size={16} />
@@ -217,6 +223,11 @@ const Discover: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const filterIconRef = useRef<HTMLDivElement>(null);
 
+  // Touch State
+  const touchStartX = useRef<number | null>(null);
+  const deltaX = useRef<number>(0);
+  const isSwiping = useRef<boolean>(false);
+
   useEffect(() => {
     const saved = localStorage.getItem('aura_user_profile');
     if (saved) {
@@ -228,7 +239,6 @@ const Discover: React.FC = () => {
       }));
     }
 
-    // Toggle logic for the filter icon/text every 4 seconds
     const interval = setInterval(() => {
         setShowFilterLabel(prev => !prev);
     }, 4000);
@@ -236,7 +246,6 @@ const Discover: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Animation for the toggle
   useEffect(() => {
       if (filterIconRef.current) {
           gsap.fromTo(filterIconRef.current, 
@@ -257,29 +266,85 @@ const Discover: React.FC = () => {
   }, [filters]);
 
   const handleSwipe = (direction: 'left' | 'right') => {
-    if (currentIndex >= filteredProfiles.length) return;
     if (!isPremium && swipeCount >= 12) return;
+    if (currentIndex >= filteredProfiles.length) return;
 
     if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0;
     
     gsap.to(cardRef.current, {
       x: direction === 'left' ? -1000 : 1000,
       opacity: 0,
-      rotate: direction === 'left' ? -15 : 15,
+      rotate: direction === 'left' ? -25 : 25,
       duration: 0.5,
+      ease: 'power2.in',
       onComplete: () => {
-        setCurrentIndex(prev => prev + 1);
-        setSwipeCount(prev => prev + 1);
-        gsap.fromTo(cardRef.current, { x: 0, opacity: 0, rotate: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.4 });
+        const nextIdx = currentIndex + 1;
+        const nextSwipeCount = swipeCount + 1;
+        
+        setCurrentIndex(nextIdx);
+        setSwipeCount(nextSwipeCount);
+        
+        // Reset overlays and card state for next profile if limit not hit
+        if (isPremium || nextSwipeCount < 12) {
+          gsap.set(cardRef.current, { x: 0, rotate: 0, opacity: 0, scale: 0.95 });
+          gsap.to(cardRef.current, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.4)' });
+        }
+        gsap.set(['.swipe-overlay-like', '.swipe-overlay-nope'], { opacity: 0 });
       }
     });
+  };
+
+  // Touch Handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!cardRef.current || (!isPremium && swipeCount >= 12)) return;
+    touchStartX.current = e.touches[0].clientX;
+    isSwiping.current = true;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartX.current || !cardRef.current) return;
+    const currentX = e.touches[0].clientX;
+    deltaX.current = currentX - touchStartX.current;
+    
+    // Calculate rotation and translation
+    const rotate = deltaX.current * 0.05;
+    gsap.set(cardRef.current, { x: deltaX.current, rotate: rotate });
+
+    // Overlay logic
+    const opacity = Math.min(Math.abs(deltaX.current) / 100, 1);
+    if (deltaX.current > 0) {
+      gsap.set('.swipe-overlay-like', { opacity: opacity });
+      gsap.set('.swipe-overlay-nope', { opacity: 0 });
+    } else {
+      gsap.set('.swipe-overlay-nope', { opacity: opacity });
+      gsap.set('.swipe-overlay-like', { opacity: 0 });
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!isSwiping.current) return;
+    isSwiping.current = false;
+    touchStartX.current = null;
+
+    const threshold = 100;
+    if (deltaX.current > threshold) {
+      handleSwipe('right');
+    } else if (deltaX.current < -threshold) {
+      handleSwipe('left');
+    } else {
+      // Snap back
+      gsap.to(cardRef.current, { x: 0, rotate: 0, duration: 0.3, ease: 'elastic.out(1, 0.7)' });
+      gsap.to(['.swipe-overlay-like', '.swipe-overlay-nope'], { opacity: 0, duration: 0.3 });
+    }
+    deltaX.current = 0;
   };
 
   const profile = filteredProfiles[currentIndex];
   const isLimitReached = !isPremium && swipeCount >= 12;
 
+  // PRIORITY: Show limit screen immediately after 12th swipe
   if (isLimitReached) return (
-    <div className="h-full flex flex-col items-center justify-center p-8 text-center space-y-8 bg-white dark:bg-black">
+    <div className="h-full flex flex-col items-center justify-center p-8 text-center space-y-8 bg-white dark:bg-black animate-in fade-in duration-500">
       <div className="relative">
         <div className="w-24 h-24 bg-yellow-400 rounded-3xl flex items-center justify-center shadow-[0_20px_50px_rgba(250,204,21,0.3)] animate-pulse">
           <LockKeyhole size={48} className="text-black" />
@@ -299,6 +364,7 @@ const Discover: React.FC = () => {
     </div>
   );
 
+  // SECONDARY: Show out of people screen (only if limit not yet reached)
   if (!profile) return (
     <div className="h-full flex flex-col items-center justify-center p-6 text-center space-y-6">
       <div className="w-20 h-20 bg-yellow-400 rounded-xl flex items-center justify-center animate-bounce shadow-2xl shadow-yellow-400/20"><Heart size={40} className="text-black" /></div>
@@ -306,7 +372,7 @@ const Discover: React.FC = () => {
         <h2 className="text-3xl font-black tracking-tighter uppercase dark:text-white">OUT OF ORBIT.</h2>
         <p className="text-xs font-bold opacity-40 uppercase tracking-widest dark:text-white/40">Broaden your filters to find more souls.</p>
       </div>
-      <button onClick={() => { setCurrentIndex(0); setSwipeCount(0); setShowFilters(true); }} className="bg-black dark:bg-white text-white dark:text-black px-10 py-4 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl active:scale-95 transition-all">Adjust Filters</button>
+      <button onClick={() => { setCurrentIndex(0); setShowFilters(true); }} className="bg-black dark:bg-white text-white dark:text-black px-10 py-4 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl active:scale-95 transition-all">Adjust Filters</button>
     </div>
   );
 
@@ -373,11 +439,30 @@ const Discover: React.FC = () => {
       </header>
 
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto no-scrollbar scroll-smooth">
-        <div ref={cardRef} className="max-w-xl mx-auto px-4 py-4 lg:py-6 space-y-6">
+        <div 
+          ref={cardRef} 
+          className="max-w-xl mx-auto px-4 py-4 lg:py-6 space-y-6 relative touch-none select-none"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
             <div className="relative aspect-[4/5] w-full rounded-[24px] overflow-hidden shadow-2xl border-2 dark:border-white/5">
               <img src={profile.img} alt={profile.name} className="absolute inset-0 w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-              <div className="absolute bottom-0 left-0 w-full p-8 space-y-3">
+              
+              {/* Swipe Overlays */}
+              <div className="swipe-overlay-like absolute inset-0 bg-green-500/30 flex items-center justify-center opacity-0 transition-opacity">
+                 <div className="px-8 py-4 border-8 border-green-500 rounded-3xl rotate-[-20deg]">
+                    <span className="text-5xl font-black text-green-500 uppercase tracking-tighter">LIKE</span>
+                 </div>
+              </div>
+              <div className="swipe-overlay-nope absolute inset-0 bg-red-500/30 flex items-center justify-center opacity-0 transition-opacity">
+                 <div className="px-8 py-4 border-8 border-red-500 rounded-3xl rotate-[20deg]">
+                    <span className="text-5xl font-black text-red-500 uppercase tracking-tighter">NOPE</span>
+                 </div>
+              </div>
+
+              <div className="absolute bottom-0 left-0 w-full p-8 space-y-3 pointer-events-none">
                  {profile.verified && (
                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-400 rounded-lg w-fit">
                        <ShieldCheck size={14} className="text-black" />
@@ -391,7 +476,6 @@ const Discover: React.FC = () => {
         </div>
       </div>
 
-      {/* Fixed Action Buttons - Adjusted position for Mobile */}
       <div className="absolute bottom-32 md:bottom-12 left-0 w-full px-6 z-50">
           <div className="max-w-xs mx-auto flex items-center justify-center gap-6 pointer-events-auto">
               <button onClick={() => handleSwipe('left')} className="w-14 h-14 bg-white dark:bg-zinc-900 border dark:border-white/10 rounded-full flex items-center justify-center text-black dark:text-white shadow-2xl active:scale-90 transition-all hover:bg-red-500 hover:text-white"><X size={28} /></button>
