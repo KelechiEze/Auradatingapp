@@ -7,7 +7,7 @@ const People: React.FC = () => {
   const [selectedProfile, setSelectedProfile] = useState<any>(null);
 
   return (
-    <div className="p-6 lg:p-12 space-y-8 relative h-full">
+    <div className="h-full overflow-y-auto no-scrollbar p-6 lg:p-12 space-y-8 relative">
       {/* Profile Detail Modal */}
       {selectedProfile && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-3xl p-0 lg:p-12 overflow-y-auto no-scrollbar scroll-smooth animate-in fade-in duration-500">
@@ -41,10 +41,7 @@ const People: React.FC = () => {
 
                  {/* Detail Body */}
                  <div className="p-12 lg:p-20">
-                    {/* Fix: showFullAlways prop was removed as it does not exist on ProfileDetailView */}
-                    <ProfileDetailView 
-                      profile={selectedProfile} 
-                    />
+                    <ProfileDetailView profile={selectedProfile} />
                  </div>
               </div>
            </div>

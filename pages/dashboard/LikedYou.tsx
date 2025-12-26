@@ -13,7 +13,7 @@ const LikedYou: React.FC = () => {
   const { isPremium, openUpgrade } = useContext(PremiumContext);
 
   return (
-    <div className="p-6 lg:p-12 space-y-12 pb-32">
+    <div className="h-full overflow-y-auto no-scrollbar p-6 lg:p-12 space-y-12 pb-32">
       <div className="space-y-4">
         <h2 className="text-4xl lg:text-7xl font-black tracking-tighter">LIKED YOU.</h2>
         {!isPremium && (

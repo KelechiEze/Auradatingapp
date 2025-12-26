@@ -63,7 +63,7 @@ export const ProfileDetailView = ({ profile }: { profile: any }) => {
   );
 
   return (
-    <div className="space-y-8 pb-32">
+    <div className="space-y-8 pb-48">
       {/* Photo Carousel */}
       <div className="relative aspect-[4/5] w-full rounded-[20px] overflow-hidden group shadow-2xl">
          <img src={photos[activePhotoIdx]} alt={profile.name} className="absolute inset-0 w-full h-full object-cover transition-all duration-700" />
@@ -140,6 +140,7 @@ const Discover: React.FC = () => {
   const { isPremium, openUpgrade } = useContext(PremiumContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
+  const [showFilterLabel, setShowFilterLabel] = useState(false);
   const [filters, setFilters] = useState({
     ageRange: [18, 50],
     genderPref: 'Everyone'
@@ -147,6 +148,7 @@ const Discover: React.FC = () => {
 
   const cardRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const filterIconRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem('aura_user_profile');
@@ -158,7 +160,24 @@ const Discover: React.FC = () => {
         ageRange: data.ageRange || [18, 50]
       }));
     }
+
+    // Toggle logic for the filter icon/text every 4 seconds
+    const interval = setInterval(() => {
+        setShowFilterLabel(prev => !prev);
+    }, 4000);
+
+    return () => clearInterval(interval);
   }, []);
+
+  // Animation for the toggle
+  useEffect(() => {
+      if (filterIconRef.current) {
+          gsap.fromTo(filterIconRef.current, 
+            { opacity: 0, y: 5 }, 
+            { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }
+          );
+      }
+  }, [showFilterLabel]);
 
   const filteredProfiles = useMemo(() => {
     return mockProfiles.filter(p => {
@@ -240,7 +259,18 @@ const Discover: React.FC = () => {
 
       <header className="px-5 py-3 flex items-center justify-between shrink-0 z-10 border-b dark:border-white/5 bg-white/50 dark:bg-black/50 backdrop-blur-xl">
          <span className="text-[8px] font-black uppercase tracking-widest opacity-40 dark:text-white">Active Discovery</span>
-         <button onClick={() => setShowFilters(true)} className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-all dark:text-white"><Filter size={18} /></button>
+         <button 
+            onClick={() => setShowFilters(true)} 
+            className="flex items-center gap-2 p-2 px-3 bg-black/5 dark:bg-white/5 rounded-xl transition-all dark:text-white border dark:border-white/10 border-black/5 min-w-[44px] h-[40px] justify-center"
+         >
+            <div ref={filterIconRef} className="flex items-center gap-2">
+                {showFilterLabel ? (
+                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-yellow-400">Age Filter</span>
+                ) : (
+                    <Filter size={18} />
+                )}
+            </div>
+         </button>
       </header>
 
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto no-scrollbar scroll-smooth">
@@ -260,14 +290,15 @@ const Discover: React.FC = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-6 left-0 w-full px-6 z-50">
+      {/* Fixed Action Buttons - Adjusted position for Mobile */}
+      <div className="absolute bottom-32 md:bottom-12 left-0 w-full px-6 z-50">
           <div className="max-w-xs mx-auto flex items-center justify-center gap-6 pointer-events-auto">
               <button onClick={() => handleSwipe('left')} className="w-14 h-14 bg-white dark:bg-zinc-900 border dark:border-white/10 rounded-full flex items-center justify-center text-black dark:text-white shadow-2xl active:scale-90 transition-all hover:bg-red-500 hover:text-white"><X size={28} /></button>
               <button onClick={openUpgrade} className="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center text-black shadow-2xl relative active:scale-90 transition-all hover:scale-110"><Star size={32} fill="currentColor" />{!isPremium && <Lock size={10} className="absolute top-4 right-4 text-red-600" />}</button>
               <button onClick={() => handleSwipe('right')} className="w-14 h-14 bg-white dark:bg-zinc-900 border dark:border-white/10 rounded-full flex items-center justify-center text-black dark:text-white shadow-2xl active:scale-90 transition-all hover:bg-yellow-400 hover:text-black"><Heart size={28} fill="currentColor" /></button>
           </div>
       </div>
-      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white dark:from-black to-transparent pointer-events-none z-40"></div>
+      <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white dark:from-black to-transparent pointer-events-none z-40"></div>
     </div>
   );
 };

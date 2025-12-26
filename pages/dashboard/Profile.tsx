@@ -70,7 +70,7 @@ const Profile: React.FC = () => {
   if (!myData || !editForm) return null;
 
   return (
-    <div ref={profileRef} className="p-4 lg:p-10 space-y-10 pb-32 max-w-5xl mx-auto">
+    <div ref={profileRef} className="h-full overflow-y-auto no-scrollbar p-4 lg:p-10 space-y-10 pb-32 max-w-5xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
          <div className="flex items-center gap-3">
@@ -121,7 +121,6 @@ const Profile: React.FC = () => {
                       </button>
                    </div>
                  ))}
-                 {/* Placeholder if user has fewer than 4 */}
                  {[...Array(Math.max(0, 4 - (myData.photos?.length || 0)))].map((_, idx) => (
                     <div key={`empty-${idx}`} className="aspect-square rounded-2xl border-2 border-dashed border-yellow-400/20 bg-black/5 dark:bg-white/5 flex items-center justify-center">
                        <Upload size={16} className="opacity-20 text-yellow-400" />
@@ -132,7 +131,7 @@ const Profile: React.FC = () => {
 
            {!isPremium && !isEditing && (
              <div className="p-8 bg-yellow-400 rounded-2xl shadow-xl shadow-yellow-400/20 relative overflow-hidden group">
-                <Sparkles className="absolute -top-6 -right-6 text-black/10 scale-[2.5] group-hover:rotate-45 transition-transform duration-1000" />
+                <Sparkles className="absolute -top-6 -right-6 text-black opacity-10 scale-[3] group-hover:rotate-45 transition-transform duration-1000" />
                 <div className="relative z-10">
                    <h4 className="text-2xl font-black text-black leading-tight">Elevate your reach.</h4>
                    <p className="text-black/60 text-[10px] font-bold mt-2 uppercase tracking-widest">Join Elite for unlimited resonance.</p>
@@ -145,8 +144,6 @@ const Profile: React.FC = () => {
         {/* Form Column */}
         <div className="lg:col-span-7 space-y-8">
            <div className="bg-slate-50 dark:bg-zinc-900 p-8 rounded-2xl border border-black/5 dark:border-white/5 space-y-10 shadow-sm">
-              
-              {/* Bio Section */}
               <div className="space-y-4">
                  <div className="flex items-center gap-2 opacity-30">
                     <Info size={12} className="dark:text-white text-black" />
@@ -164,7 +161,6 @@ const Profile: React.FC = () => {
                  )}
               </div>
 
-              {/* Details Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                  <div className="space-y-5">
                     <h4 className="text-[10px] font-black uppercase tracking-widest opacity-30 dark:text-white text-black">Identity Node</h4>
@@ -190,7 +186,6 @@ const Profile: React.FC = () => {
                  </div>
               </div>
 
-              {/* Prompt Section */}
               <div className="p-8 bg-black dark:bg-zinc-800 text-white rounded-2xl relative overflow-hidden group border dark:border-white/5">
                  <MessageSquare className="absolute top-4 right-4 text-yellow-400 opacity-20 group-hover:rotate-12 transition-all duration-1000" size={64} />
                  <h5 className="text-[8px] font-black uppercase tracking-[0.4em] opacity-50 mb-4 italic">Signal Pulse Prompt</h5>

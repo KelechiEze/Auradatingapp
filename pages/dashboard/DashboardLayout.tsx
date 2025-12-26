@@ -240,8 +240,8 @@ const DashboardLayout: React.FC = () => {
             </div>
           </header>
 
-          <div className="flex-1 overflow-y-auto no-scrollbar dash-view bg-slate-50 dark:bg-black">
-            <div className="max-w-4xl mx-auto h-full px-4 lg:px-6">
+          <div className="flex-1 overflow-hidden dash-view bg-slate-50 dark:bg-black">
+            <div className="max-w-4xl mx-auto h-full px-4 lg:px-6 relative">
               <Outlet />
             </div>
           </div>
