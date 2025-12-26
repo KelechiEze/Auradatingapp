@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import gsap from 'gsap';
 import { 
   ArrowRight, ArrowLeft, Heart, Sparkles, Shield, User, MapPin, 
-  Upload, Info, Navigation, X
+  Upload, Navigation, X, Loader2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../App';
@@ -30,9 +30,11 @@ const Onboarding: React.FC = () => {
   const { isDark } = useContext(ThemeContext);
   const [currentStep, setCurrentStep] = useState(1);
   const [locLoading, setLocLoading] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const stepRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const loadingRef = useRef<HTMLDivElement>(null);
   const [activeUploadIdx, setActiveUploadIdx] = useState<number | null>(null);
 
   // Form State
@@ -45,7 +47,7 @@ const Onboarding: React.FC = () => {
     values: [] as string[], languages: [] as string[], belief: 'Spiritual',
     children: 'Want someday', relocate: 'Maybe',
     essentials: [] as string[], bio: '', prompt: 'Consistency and kindness.',
-    photos: [] as string[], verified: true // Auto-verified since face check is removed
+    photos: [] as string[], verified: true 
   });
 
   useEffect(() => {
@@ -59,16 +61,31 @@ const Onboarding: React.FC = () => {
     );
   }, [currentStep]);
 
+  useEffect(() => {
+    if (isCreating && loadingRef.current) {
+      gsap.fromTo(loadingRef.current, 
+        { opacity: 0, scale: 0.9 }, 
+        { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.7)' }
+      );
+    }
+  }, [isCreating]);
+
   const handleNext = () => {
     if (currentStep < 7) {
       setCurrentStep(prev => prev + 1);
     } else {
-      if (formData.photos.length < 4) {
-        alert("Please upload all 4 images to continue.");
+      if (formData.photos.filter(p => !!p).length < 4) {
+        alert("Please upload all 4 images to synchronize your presence.");
         return;
       }
-      localStorage.setItem('aura_user_profile', JSON.stringify(formData));
-      navigate('/otp');
+      
+      // Simulated Account Creation
+      setIsCreating(true);
+      
+      setTimeout(() => {
+        localStorage.setItem('aura_user_profile', JSON.stringify(formData));
+        navigate('/otp');
+      }, 3000);
     }
   };
 
@@ -136,6 +153,38 @@ const Onboarding: React.FC = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  if (isCreating) {
+    return (
+      <div className="min-h-screen flex items-center justify-center dark:bg-black bg-white px-6">
+        <div ref={loadingRef} className="max-w-md w-full text-center space-y-8">
+           <div className="relative inline-block">
+              <div className="w-24 h-24 rounded-full border-4 border-yellow-400/20 flex items-center justify-center">
+                 <Loader2 className="text-yellow-400 animate-spin" size={48} />
+              </div>
+              <Sparkles className="absolute -top-2 -right-2 text-yellow-400 animate-pulse" />
+           </div>
+           <div className="space-y-3">
+              <h2 className="text-3xl font-black tracking-tighter uppercase dark:text-white">SYNCHRONIZING ORBIT.</h2>
+              <p className="text-xs font-black uppercase tracking-[0.3em] opacity-40 animate-pulse dark:text-white">Creating account for user...</p>
+           </div>
+           <div className="pt-10 flex flex-col gap-2">
+              <div className="h-1 bg-yellow-400/10 rounded-full overflow-hidden w-48 mx-auto">
+                 <div className="h-full bg-yellow-400 animate-[progress_3s_ease-in-out_infinite]" style={{ width: '40%' }}></div>
+              </div>
+              <span className="text-[8px] font-black uppercase tracking-widest opacity-20 dark:text-white">Initializing global resonance mapping</span>
+           </div>
+        </div>
+        <style>{`
+          @keyframes progress {
+            0% { width: 0%; transform: translateX(-100%); }
+            50% { width: 50%; transform: translateX(0%); }
+            100% { width: 0%; transform: translateX(100%); }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className="min-h-screen pt-20 pb-20 px-6 dark:bg-black bg-white transition-colors duration-700 flex flex-col items-center justify-center">
