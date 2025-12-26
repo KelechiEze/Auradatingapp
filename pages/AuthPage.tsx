@@ -1,16 +1,22 @@
 
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import gsap from 'gsap';
-import { Mail, Lock, User, ArrowRight, Eye, EyeOff, Sparkles, Heart, Globe, Shield } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Mail, Lock, User, ArrowRight, Eye, EyeOff, Sparkles, Heart, Globe, Shield, Loader2 } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ThemeContext } from '../App';
 
 const AuthPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isDark } = useContext(ThemeContext);
-  const [isLogin, setIsLogin] = useState(true);
+  
+  // Start as Register if navigated from Begin Journey, otherwise Login
+  const [isLogin, setIsLogin] = useState(!location.state?.register);
   const [showPass, setShowPass] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);
+  
   const containerRef = useRef<HTMLDivElement>(null);
+  const loaderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.fromTo(containerRef.current, 
@@ -19,16 +25,53 @@ const AuthPage: React.FC = () => {
     );
   }, [isLogin]);
 
+  useEffect(() => {
+    if (isInitializing && loaderRef.current) {
+      gsap.fromTo(loaderRef.current,
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
+      );
+    }
+  }, [isInitializing]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLogin) {
-      // Redirect to onboarding for new registrations
-      navigate('/onboarding');
+      // Show spinner for 4 seconds then redirect to onboarding
+      setIsInitializing(true);
+      setTimeout(() => {
+        navigate('/onboarding');
+      }, 4000);
     } else {
-      // Direct navigation to dashboard for login as requested
+      // Direct navigation to dashboard for login
       navigate('/dashboard');
     }
   };
+
+  if (isInitializing) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center dark:bg-black bg-white px-6 transition-colors duration-700">
+        <div ref={loaderRef} className="max-w-md w-full text-center space-y-8">
+           <div className="relative inline-block">
+              <div className="w-24 h-24 rounded-full border-4 border-yellow-400/20 flex items-center justify-center">
+                 <Loader2 className="text-yellow-400 animate-spin" size={48} />
+              </div>
+              <Sparkles className="absolute -top-2 -right-2 text-yellow-400 animate-pulse" />
+           </div>
+           <div className="space-y-3">
+              <h2 className="text-4xl font-black tracking-tighter uppercase dark:text-white">INITIALIZING RESONANCE.</h2>
+              <p className="text-xs font-black uppercase tracking-[0.3em] opacity-40 animate-pulse dark:text-white">Scanning global soul nodes...</p>
+           </div>
+           <div className="pt-10 flex flex-col gap-2">
+              <div className="h-1 bg-yellow-400/10 rounded-full overflow-hidden w-48 mx-auto">
+                 <div className="h-full bg-yellow-400 animate-[pulse_1.5s_ease-in-out_infinite]" style={{ width: '100%' }}></div>
+              </div>
+              <span className="text-[8px] font-black uppercase tracking-widest opacity-20 dark:text-white">Securing Identity Aura™ Encryption</span>
+           </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-40 pb-20 px-6 flex items-center justify-center dark:bg-black bg-white overflow-hidden relative transition-colors duration-700">

@@ -88,7 +88,7 @@ const Hero: React.FC = () => {
 
         <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-4">
           <button 
-            onClick={() => navigate('/onboarding')}
+            onClick={() => navigate('/auth', { state: { register: true } })}
             className="interactive group relative bg-yellow-400 text-black px-8 py-3.5 rounded-xl font-black text-sm flex items-center gap-3 overflow-hidden transition-all shadow-lg"
           >
             <span className="relative z-10 uppercase tracking-widest text-xs">BEGIN JOURNEY</span>
